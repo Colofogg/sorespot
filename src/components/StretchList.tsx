@@ -8,16 +8,26 @@ interface Props {
   onBack: () => void
 }
 
+const PREVIEW_COUNT = 3
+
 export function StretchList({ selectedRegions, onBack }: Props) {
   const [loading, setLoading] = useState(true)
   const [showFullDisclaimer, setShowFullDisclaimer] = useState(false)
+  const [showAll, setShowAll] = useState(false)
   const stretches = stretchesForRegions(selectedRegions)
 
   useEffect(() => {
     setLoading(true)
+    setShowAll(false)
     const t = window.setTimeout(() => setLoading(false), 450)
     return () => window.clearTimeout(t)
   }, [selectedRegions])
+
+  const visible =
+    showAll || stretches.length <= PREVIEW_COUNT
+      ? stretches
+      : stretches.slice(0, PREVIEW_COUNT)
+  const hiddenCount = Math.max(0, stretches.length - PREVIEW_COUNT)
 
   return (
     <div className="screen stretches-screen">
@@ -52,11 +62,31 @@ export function StretchList({ selectedRegions, onBack }: Props) {
       ) : stretches.length === 0 ? (
         <p className="empty-stretches">No stretches found for those spots yet.</p>
       ) : (
-        <ul className="stretch-cards">
-          {stretches.map((s) => (
-            <StretchCard key={s.id} stretch={s} />
-          ))}
-        </ul>
+        <>
+          <ul className="stretch-cards">
+            {visible.map((s) => (
+              <StretchCard key={s.id} stretch={s} />
+            ))}
+          </ul>
+          {!showAll && hiddenCount > 0 && (
+            <button
+              type="button"
+              className="btn secondary more-stretches"
+              onClick={() => setShowAll(true)}
+            >
+              More stretches ({hiddenCount})
+            </button>
+          )}
+          {showAll && stretches.length > PREVIEW_COUNT && (
+            <button
+              type="button"
+              className="btn secondary more-stretches"
+              onClick={() => setShowAll(false)}
+            >
+              Show fewer
+            </button>
+          )}
+        </>
       )}
     </div>
   )

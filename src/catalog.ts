@@ -14,6 +14,14 @@ const ALIASES: Record<string, string[]> = {
   traps: ['neck', 'shoulders'],
 }
 
+/** Preserve acronyms like IT when lowercasing the rest of a label. */
+function softLower(label: string): string {
+  return label
+    .replace(/\bIT\b/g, '§IT§')
+    .toLowerCase()
+    .replace(/§it§/g, 'IT')
+}
+
 export function regionLabel(id: string): string {
   const base = catalogRegionId(id)
   if (base === 'traps') {
@@ -21,8 +29,8 @@ export function regionLabel(id: string): string {
     return `${side}Traps`
   }
   const label = catalog.regions.find((r) => r.id === base)?.label ?? base
-  if (/-(?:l)$/i.test(id)) return `Left ${label.toLowerCase()}`
-  if (/-(?:r)$/i.test(id)) return `Right ${label.toLowerCase()}`
+  if (/-(?:l)$/i.test(id)) return `Left ${softLower(label)}`
+  if (/-(?:r)$/i.test(id)) return `Right ${softLower(label)}`
   return label
 }
 

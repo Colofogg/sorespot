@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
+import { useCallback, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import type { Gender, ViewAngle } from '../types'
 import { regionLabel } from '../catalog'
 import { BodySilhouette } from './BodySilhouette'
@@ -25,6 +25,9 @@ const VIEW_LABEL: Record<ViewAngle, string> = {
   side: 'Side',
   back: 'Back',
 }
+
+/** Horizontal drag past this (px) = rotate; otherwise = tap select. */
+const DRAG_THRESHOLD = 12
 
 function nearestView(yaw: number): ViewAngle {
   let y = ((yaw % 360) + 360) % 360
@@ -59,39 +62,82 @@ export function BodyMap({
   onChangeBody,
 }: Props) {
   const [view, setView] = useState<ViewAngle>('front')
-  const [dragYaw, setDragYaw] = useState(0)
   const [dragging, setDragging] = useState(false)
+  const [spinning, setSpinning] = useState(false)
+  const [pressedId, setPressedId] = useState<string | null>(null)
+
   const startX = useRef(0)
   const startYaw = useRef(0)
+  const dragYaw = useRef(0)
+  const isDragging = useRef(false)
   const moved = useRef(false)
-  const reduceMotion = usePrefersReducedMotion()
+  const pendingHotspot = useRef<string | null>(null)
+  const viewRef = useRef(view)
+  viewRef.current = view
 
   const snapTo = useCallback((next: ViewAngle) => {
     setView(next)
-    setDragYaw(VIEW_YAW[next])
+    dragYaw.current = VIEW_YAW[next]
+    startYaw.current = VIEW_YAW[next]
   }, [])
 
   const onPointerDown = (e: ReactPointerEvent) => {
+    if (e.button !== 0 && e.pointerType === 'mouse') return
     ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
     startX.current = e.clientX
-    startYaw.current = VIEW_YAW[view]
+    startYaw.current = VIEW_YAW[viewRef.current]
+    dragYaw.current = startYaw.current
     moved.current = false
+    isDragging.current = true
     setDragging(true)
+    setSpinning(false)
+
+    const target = e.target as Element | null
+    const region =
+      target?.closest?.('[data-region]')?.getAttribute('data-region') ?? null
+    pendingHotspot.current = region
+    setPressedId(region)
   }
 
   const onPointerMove = (e: ReactPointerEvent) => {
-    if (!dragging) return
+    if (!isDragging.current) return
     const dx = e.clientX - startX.current
-    if (Math.abs(dx) > 8) moved.current = true
-    const next = startYaw.current + dx * 0.55
-    setDragYaw(next)
-    if (!reduceMotion) setView(nearestView(next))
+    if (Math.abs(dx) > DRAG_THRESHOLD) {
+      if (!moved.current) {
+        moved.current = true
+        setSpinning(true)
+        setPressedId(null)
+        pendingHotspot.current = null
+      }
+    }
+    if (!moved.current) return
+
+    const nextYaw = startYaw.current + dx * 0.55
+    dragYaw.current = nextYaw
+    // Discrete face-on silhouette swap — never CSS rotateY (blanks at ~90°)
+    const nextView = nearestView(nextYaw)
+    if (nextView !== viewRef.current) {
+      setView(nextView)
+    }
   }
 
-  const onPointerUp = () => {
-    if (!dragging) return
+  const endPointer = () => {
+    if (!isDragging.current) return
+    isDragging.current = false
     setDragging(false)
-    snapTo(nearestView(dragYaw))
+    setSpinning(false)
+    setPressedId(null)
+
+    if (moved.current) {
+      snapTo(nearestView(dragYaw.current))
+      pendingHotspot.current = null
+      return
+    }
+
+    // Short tap → select on touchend
+    const id = pendingHotspot.current
+    pendingHotspot.current = null
+    if (id) onToggle(id)
   }
 
   const hasSpots = selected.size > 0
@@ -119,30 +165,20 @@ export function BodyMap({
       </header>
 
       <div
-        className={`body-stage${dragging ? ' dragging' : ''}`}
+        className={`body-stage${dragging ? ' pointer-active' : ''}${spinning ? ' dragging' : ''}`}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
-        onPointerCancel={onPointerUp}
+        onPointerUp={endPointer}
+        onPointerCancel={endPointer}
       >
-        <div
-          className="body-rotate"
-          style={
-            reduceMotion
-              ? undefined
-              : {
-                  transform: `perspective(900px) rotateY(${-dragYaw}deg)`,
-                }
-          }
-        >
+        <div className={`body-rotate${spinning ? ' spinning' : ''}`} data-view={view}>
           <BodySilhouette
             gender={gender}
             view={view}
             selected={selected}
-            onToggle={(id) => {
-              if (moved.current) return
-              onToggle(id)
-            }}
+            suppressTap
+            pressedId={pressedId}
+            onToggle={onToggle}
           />
         </div>
         <p className="drag-hint">Drag to spin · Front / ¾ / Side / Back</p>
@@ -178,16 +214,4 @@ export function BodyMap({
       </div>
     </div>
   )
-}
-
-function usePrefersReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(false)
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const update = () => setReduced(mq.matches)
-    update()
-    mq.addEventListener('change', update)
-    return () => mq.removeEventListener('change', update)
-  }, [])
-  return reduced
 }

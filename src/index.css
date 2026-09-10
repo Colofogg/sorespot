@@ -101,7 +101,7 @@ button {
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   border: 2px solid transparent;
-  min-height: 260px;
+  min-height: 300px;
   transition: border-color 0.15s ease, transform 0.15s ease;
 }
 
@@ -115,8 +115,8 @@ button {
 }
 
 .gender-preview {
-  width: 100px;
-  height: 180px;
+  width: 110px;
+  height: 220px;
 }
 
 .sil-fill {
@@ -197,10 +197,15 @@ button {
 }
 
 .body-rotate {
-  width: min(100%, 320px);
-  transform-style: preserve-3d;
-  transition: transform 0.26s ease;
-  will-change: transform;
+  width: min(100%, 340px);
+  transition: opacity 0.18s ease, transform 0.22s ease;
+  /* Always face-on — view swaps; never edge-on rotateY (that blanks Side) */
+  transform: none;
+}
+
+.body-rotate.spinning {
+  opacity: 0.92;
+  transform: scale(0.985);
 }
 
 .body-stage.dragging .body-rotate {
@@ -224,46 +229,84 @@ button {
 }
 
 .body-outline {
+  /* Soft edge — no hard Flat Stanley outline */
   fill: var(--teal-soft);
-  stroke: rgba(45, 90, 90, 0.28);
-  stroke-width: 1.1;
+  stroke: rgba(45, 90, 90, 0.14);
+  stroke-width: 0.8;
   stroke-linejoin: round;
 }
 
 .body-shadow {
-  fill: rgba(26, 46, 46, 0.18);
+  fill: rgba(26, 46, 46, 0.2);
 }
 
 .muscle-guide {
   fill: none;
-  stroke: rgba(26, 46, 46, 0.14);
-  stroke-width: 1.2;
+  stroke: rgba(26, 46, 46, 0.2);
+  stroke-width: 1.35;
   stroke-linecap: round;
 }
 
+/* Visible at rest on touch — soft outlines/fills (no hover dependency) */
 .hotspot {
-  fill: transparent;
-  stroke: transparent;
-  stroke-width: 1;
+  fill: rgba(45, 90, 90, 0.1);
+  stroke: rgba(45, 90, 90, 0.32);
+  stroke-width: 1.25;
+  stroke-linejoin: round;
   cursor: pointer;
-  transition: fill 0.15s ease;
+  transition: fill 0.12s ease, stroke 0.12s ease, stroke-width 0.12s ease;
+  pointer-events: auto;
 }
 
-.hotspot.itband:hover,
-.hotspot.itband:focus-visible {
-  fill: rgba(45, 90, 90, 0.22);
+.hotspot.itband {
+  fill: rgba(45, 90, 90, 0.12);
+  stroke: rgba(45, 90, 90, 0.38);
+  stroke-width: 1.4;
 }
 
 .hotspot:hover,
 .hotspot:focus-visible {
-  fill: rgba(45, 90, 90, 0.18);
+  fill: rgba(45, 90, 90, 0.22);
+  stroke: rgba(45, 90, 90, 0.5);
   outline: none;
+}
+
+.hotspot.pressed {
+  fill: rgba(45, 90, 90, 0.28);
+  stroke: rgba(45, 90, 90, 0.55);
+  stroke-width: 1.8;
 }
 
 .hotspot.selected {
   fill: var(--spot-fill);
   stroke: var(--spot);
-  stroke-width: 2;
+  stroke-width: 2.25;
+}
+
+.hotspot.selected.pressed {
+  fill: rgba(224, 122, 95, 0.62);
+}
+
+@keyframes hotspot-pulse {
+  0%,
+  100% {
+    fill: rgba(45, 90, 90, 0.1);
+    stroke: rgba(45, 90, 90, 0.32);
+  }
+  50% {
+    fill: rgba(45, 90, 90, 0.28);
+    stroke: rgba(45, 90, 90, 0.55);
+  }
+}
+
+.hotspot.pulse {
+  animation: hotspot-pulse 0.8s ease-in-out 3;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hotspot.pulse {
+    animation: none;
+  }
 }
 
 .drag-hint {
@@ -512,4 +555,11 @@ button {
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--muted);
+}
+
+
+.more-stretches {
+  width: 100%;
+  margin: 0 0 24px;
+  flex: none;
 }
