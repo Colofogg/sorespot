@@ -1,31 +1,87 @@
 {
-  "version": "1.0",
+  "version": "1.1",
   "title": "SoreSpot Stretch Catalog",
-  "audience": "gentle morning mobility / wellness — not medical advice",
+  "audience": "gentle morning mobility / wellness \u2014 not medical advice",
   "disclaimer": "These are gentle mobility ideas for everyday stiffness, not a diagnosis or treatment plan. Stop if something hurts sharply, feels wrong, or makes symptoms worse. If pain is severe, sudden, follows an injury, includes numbness or weakness, or keeps coming back, talk with a doctor or qualified clinician.",
   "regions": [
-    { "id": "soles-feet", "label": "Soles / feet" },
-    { "id": "calves", "label": "Calves" },
-    { "id": "quads", "label": "Quads" },
-    { "id": "hamstrings", "label": "Hamstrings" },
-    { "id": "hips-glutes", "label": "Hips / glutes" },
-    { "id": "lower-back", "label": "Lower back" },
-    { "id": "mid-back", "label": "Mid back" },
-    { "id": "upper-back", "label": "Upper back" },
-    { "id": "neck", "label": "Neck" },
-    { "id": "shoulders", "label": "Shoulders" },
-    { "id": "elbows-forearms", "label": "Elbows / forearms" },
-    { "id": "wrists-hands", "label": "Wrists / hands" },
-    { "id": "chest", "label": "Chest" },
-    { "id": "abs", "label": "Abs" },
-    { "id": "knees", "label": "Knees" },
-    { "id": "ankles", "label": "Ankles" }
+    {
+      "id": "soles-feet",
+      "label": "Soles / feet"
+    },
+    {
+      "id": "calves",
+      "label": "Calves"
+    },
+    {
+      "id": "quads",
+      "label": "Quads"
+    },
+    {
+      "id": "hamstrings",
+      "label": "Hamstrings"
+    },
+    {
+      "id": "it-band",
+      "label": "Outer thigh (IT band)"
+    },
+    {
+      "id": "hips-glutes",
+      "label": "Hips / glutes"
+    },
+    {
+      "id": "lower-back",
+      "label": "Lower back"
+    },
+    {
+      "id": "mid-back",
+      "label": "Mid back"
+    },
+    {
+      "id": "upper-back",
+      "label": "Upper back"
+    },
+    {
+      "id": "neck",
+      "label": "Neck"
+    },
+    {
+      "id": "shoulders",
+      "label": "Shoulders"
+    },
+    {
+      "id": "elbows-forearms",
+      "label": "Elbows / forearms"
+    },
+    {
+      "id": "wrists-hands",
+      "label": "Wrists / hands"
+    },
+    {
+      "id": "chest",
+      "label": "Chest"
+    },
+    {
+      "id": "abs",
+      "label": "Abs"
+    },
+    {
+      "id": "knees",
+      "label": "Knees"
+    },
+    {
+      "id": "ankles",
+      "label": "Ankles"
+    }
   ],
   "stretches": [
     {
       "id": "standing-calf-wall",
       "name": "Standing calf stretch (wall)",
-      "regions": ["calves", "soles-feet", "ankles"],
+      "regions": [
+        "calves",
+        "soles-feet",
+        "ankles"
+      ],
       "whyHelps": "Loosens tight calves that often pull on the bottom of the foot and make mornings feel stiff.",
       "steps": [
         "Stand facing a wall with both hands on it for balance.",
@@ -33,14 +89,20 @@
         "Bend the front knee gently until you feel a stretch in the back calf.",
         "Switch sides."
       ],
-      "durationOrReps": "Hold 20–30 seconds each side, 2 rounds",
-      "cautions": "Keep the back heel down; don’t bounce. Ease off if you feel sharp pain in the Achilles or foot.",
-      "seeAProWhen": "Foot or calf pain is severe, swollen, or follows a sudden pop or injury."
+      "durationOrReps": "Hold 20\u201330 seconds each side, 2 rounds",
+      "cautions": "Keep the back heel down; don\u2019t bounce. Ease off if you feel sharp pain in the Achilles or foot.",
+      "seeAProWhen": "Foot or calf pain is severe, swollen, or follows a sudden pop or injury.",
+      "videoUrl": "https://www.youtube.com/watch?v=trC42QD0wQI",
+      "imageUrl": null
     },
     {
       "id": "seated-soleus",
       "name": "Seated soleus stretch",
-      "regions": ["calves", "soles-feet", "ankles"],
+      "regions": [
+        "calves",
+        "soles-feet",
+        "ankles"
+      ],
       "whyHelps": "Targets the deeper calf muscle that can stay tight even when a straight-leg calf stretch feels okay.",
       "steps": [
         "Sit in a chair with feet flat.",
@@ -48,14 +110,18 @@
         "Lean forward a little from the hips until you feel a stretch lower in the calf.",
         "Switch sides."
       ],
-      "durationOrReps": "Hold 20–30 seconds each side, 2 rounds",
-      "cautions": "Move slowly; don’t force the knee past a comfortable bend.",
-      "seeAProWhen": "Calf pain comes with redness, warmth, or swelling in one leg."
+      "durationOrReps": "Hold 20\u201330 seconds each side, 2 rounds",
+      "cautions": "Move slowly; don\u2019t force the knee past a comfortable bend.",
+      "seeAProWhen": "Calf pain comes with redness, warmth, or swelling in one leg.",
+      "videoUrl": "https://www.youtube.com/watch?v=6RMkboXi-OM",
+      "imageUrl": null
     },
     {
       "id": "plantar-roll",
       "name": "Gentle foot roll",
-      "regions": ["soles-feet"],
+      "regions": [
+        "soles-feet"
+      ],
       "whyHelps": "Eases tightness along the bottom of the foot after sleep or long standing.",
       "steps": [
         "Sit down and place a water bottle or soft ball under one foot.",
@@ -63,14 +129,19 @@
         "Pause on any tender spot for a breath, then keep rolling.",
         "Switch feet."
       ],
-      "durationOrReps": "45–60 seconds per foot",
-      "cautions": "Use light pressure only — this should feel like a massage, not digging in.",
-      "seeAProWhen": "Heel or arch pain is sharp first thing every morning and doesn’t ease after a few steps for days."
+      "durationOrReps": "45\u201360 seconds per foot",
+      "cautions": "Use light pressure only \u2014 this should feel like a massage, not digging in.",
+      "seeAProWhen": "Heel or arch pain is sharp first thing every morning and doesn\u2019t ease after a few steps for days.",
+      "videoUrl": "https://www.youtube.com/watch?v=E_J10u3meDk",
+      "imageUrl": null
     },
     {
       "id": "standing-quad",
       "name": "Standing quad stretch",
-      "regions": ["quads", "knees"],
+      "regions": [
+        "quads",
+        "knees"
+      ],
       "whyHelps": "Opens the front of the thigh, which can feel tight after sitting or walking.",
       "steps": [
         "Stand near a wall or chair for balance.",
@@ -78,29 +149,40 @@
         "Gently draw the heel toward the seat, keeping knees close and torso upright.",
         "Switch sides."
       ],
-      "durationOrReps": "Hold 20–30 seconds each side, 2 rounds",
-      "cautions": "Don’t yank the foot; keep a soft bend in the standing knee. Skip if the knee complains.",
-      "seeAProWhen": "Knee pain, swelling, or locking happens during or after the stretch."
+      "durationOrReps": "Hold 20\u201330 seconds each side, 2 rounds",
+      "cautions": "Don\u2019t yank the foot; keep a soft bend in the standing knee. Skip if the knee complains.",
+      "seeAProWhen": "Knee pain, swelling, or locking happens during or after the stretch.",
+      "videoUrl": "https://www.youtube.com/watch?v=kzAsm4WQqvQ",
+      "imageUrl": null
     },
     {
       "id": "side-lying-quad",
       "name": "Side-lying quad stretch",
-      "regions": ["quads", "knees"],
-      "whyHelps": "Same front-thigh stretch with less balance demand — good for morning stiffness.",
+      "regions": [
+        "quads",
+        "knees"
+      ],
+      "whyHelps": "Same front-thigh stretch with less balance demand \u2014 good for morning stiffness.",
       "steps": [
         "Lie on your side with the bottom leg bent for comfort.",
         "Bend the top knee and hold the ankle or pant leg.",
         "Gently draw the heel toward the seat without arching the low back.",
         "Switch sides."
       ],
-      "durationOrReps": "Hold 20–30 seconds each side, 2 rounds",
+      "durationOrReps": "Hold 20\u201330 seconds each side, 2 rounds",
       "cautions": "Keep hips stacked; stop if you feel pinching in the knee or low back.",
-      "seeAProWhen": "Pain radiates down the leg or the knee feels unstable."
+      "seeAProWhen": "Pain radiates down the leg or the knee feels unstable.",
+      "videoUrl": null,
+      "imageUrl": "illust/side-lying-quad"
     },
     {
       "id": "seated-hamstring",
       "name": "Seated hamstring stretch",
-      "regions": ["hamstrings", "lower-back", "knees"],
+      "regions": [
+        "hamstrings",
+        "lower-back",
+        "knees"
+      ],
       "whyHelps": "Gently lengthens the back of the thigh, which often feels tight after sitting.",
       "steps": [
         "Sit on the edge of a chair with one leg extended, heel on the floor, toes up.",
@@ -108,29 +190,40 @@
         "Stop before your low back rounds a lot.",
         "Switch sides."
       ],
-      "durationOrReps": "Hold 20–30 seconds each side, 2 rounds",
-      "cautions": "Hinge from the hips, don’t collapse the chest. Ease off if you feel tingling in the foot.",
-      "seeAProWhen": "Back-of-leg pain is sudden, severe, or includes numbness after a lift or fall."
+      "durationOrReps": "Hold 20\u201330 seconds each side, 2 rounds",
+      "cautions": "Hinge from the hips, don\u2019t collapse the chest. Ease off if you feel tingling in the foot.",
+      "seeAProWhen": "Back-of-leg pain is sudden, severe, or includes numbness after a lift or fall.",
+      "videoUrl": "https://www.youtube.com/watch?v=iPD_nUSdJ6o",
+      "imageUrl": null
     },
     {
       "id": "supine-hamstring-strap",
       "name": "Lying hamstring stretch (towel)",
-      "regions": ["hamstrings", "knees"],
-      "whyHelps": "A supported stretch for the back of the thigh that’s easy on the low back.",
+      "regions": [
+        "hamstrings",
+        "knees"
+      ],
+      "whyHelps": "A supported stretch for the back of the thigh that\u2019s easy on the low back.",
       "steps": [
         "Lie on your back with both knees bent.",
         "Loop a towel around one foot and straighten that leg toward the ceiling as far as comfortable.",
         "Keep the other foot on the floor.",
         "Switch sides."
       ],
-      "durationOrReps": "Hold 20–30 seconds each side, 2 rounds",
+      "durationOrReps": "Hold 20\u201330 seconds each side, 2 rounds",
       "cautions": "Only straighten as far as you can without forcing; a soft knee is fine.",
-      "seeAProWhen": "Pain shoots below the knee or you feel weakness in the leg."
+      "seeAProWhen": "Pain shoots below the knee or you feel weakness in the leg.",
+      "videoUrl": "https://www.youtube.com/watch?v=Il1L75v6gq0",
+      "imageUrl": null
     },
     {
       "id": "figure-four",
       "name": "Figure-four hip stretch",
-      "regions": ["hips-glutes", "lower-back"],
+      "regions": [
+        "hips-glutes",
+        "lower-back",
+        "it-band"
+      ],
       "whyHelps": "Opens the outer hip and glute area that often feels tight from sitting.",
       "steps": [
         "Lie on your back with knees bent.",
@@ -138,29 +231,41 @@
         "Gently pull the uncrossed thigh toward your chest, or press the crossed knee away lightly.",
         "Switch sides."
       ],
-      "durationOrReps": "Hold 20–30 seconds each side, 2 rounds",
-      "cautions": "Keep the head and shoulders relaxed. Don’t force the crossed knee down.",
-      "seeAProWhen": "Hip pain is sharp, or you have groin pain with walking."
+      "durationOrReps": "Hold 20\u201330 seconds each side, 2 rounds",
+      "cautions": "Keep the head and shoulders relaxed. Don\u2019t force the crossed knee down.",
+      "seeAProWhen": "Hip pain is sharp, or you have groin pain with walking.",
+      "videoUrl": "https://www.youtube.com/watch?v=-g0nuyTHMrI",
+      "imageUrl": null
     },
     {
       "id": "kneeling-hip-flexor",
       "name": "Kneeling hip-flexor stretch",
-      "regions": ["hips-glutes", "quads", "lower-back"],
+      "regions": [
+        "hips-glutes",
+        "quads",
+        "lower-back",
+        "it-band"
+      ],
       "whyHelps": "Stretches the front of the hip that shortens from long sitting and can tug on the low back.",
       "steps": [
         "Kneel on a soft surface with one foot forward (lunge position).",
-        "Tuck the pelvis slightly (gentle “tuck the tail”) so you feel a stretch in the front of the back hip.",
+        "Tuck the pelvis slightly (gentle \u201ctuck the tail\u201d) so you feel a stretch in the front of the back hip.",
         "Keep the torso upright.",
         "Switch sides."
       ],
-      "durationOrReps": "Hold 20–30 seconds each side, 2 rounds",
-      "cautions": "Pad the back knee. Don’t dump into a big low-back arch.",
-      "seeAProWhen": "Hip or groin pain worsens with walking or getting out of a chair."
+      "durationOrReps": "Hold 20\u201330 seconds each side, 2 rounds",
+      "cautions": "Pad the back knee. Don\u2019t dump into a big low-back arch.",
+      "seeAProWhen": "Hip or groin pain worsens with walking or getting out of a chair.",
+      "videoUrl": "https://www.youtube.com/watch?v=rrnKzcTems4",
+      "imageUrl": null
     },
     {
       "id": "knee-to-chest",
       "name": "Knee-to-chest",
-      "regions": ["lower-back", "hips-glutes"],
+      "regions": [
+        "lower-back",
+        "hips-glutes"
+      ],
       "whyHelps": "Gently eases low-back stiffness after sleep or sitting.",
       "steps": [
         "Lie on your back with knees bent.",
@@ -168,14 +273,20 @@
         "Breathe slowly.",
         "Switch sides, then optionally hug both knees."
       ],
-      "durationOrReps": "Hold 20–30 seconds each side (and both), 1–2 rounds",
+      "durationOrReps": "Hold 20\u201330 seconds each side (and both), 1\u20132 rounds",
       "cautions": "Move slowly; stop if pain shoots down a leg.",
-      "seeAProWhen": "Low-back pain includes numbness, weakness, or bowel/bladder changes — seek care promptly."
+      "seeAProWhen": "Low-back pain includes numbness, weakness, or bowel/bladder changes \u2014 seek care promptly.",
+      "videoUrl": "https://www.youtube.com/watch?v=2VuLBYrgG94",
+      "imageUrl": null
     },
     {
       "id": "cat-cow",
-      "name": "Cat–cow",
-      "regions": ["lower-back", "mid-back", "upper-back"],
+      "name": "Cat\u2013cow",
+      "regions": [
+        "lower-back",
+        "mid-back",
+        "upper-back"
+      ],
       "whyHelps": "Gently moves the whole spine to wake up morning stiffness.",
       "steps": [
         "Start on hands and knees, hands under shoulders, knees under hips.",
@@ -183,14 +294,20 @@
         "Exhale and round the back, tucking the chin (cat).",
         "Flow slowly between the two."
       ],
-      "durationOrReps": "8–10 slow rounds",
-      "cautions": "Keep the motion small and smooth; don’t force the end ranges.",
-      "seeAProWhen": "Pain is sharp, one-sided, or worse with every bend."
+      "durationOrReps": "8\u201310 slow rounds",
+      "cautions": "Keep the motion small and smooth; don\u2019t force the end ranges.",
+      "seeAProWhen": "Pain is sharp, one-sided, or worse with every bend.",
+      "videoUrl": "https://www.youtube.com/watch?v=y39PrKY_4JM",
+      "imageUrl": null
     },
     {
       "id": "childs-pose",
-      "name": "Child’s pose (gentle)",
-      "regions": ["lower-back", "hips-glutes", "mid-back"],
+      "name": "Child\u2019s pose (gentle)",
+      "regions": [
+        "lower-back",
+        "hips-glutes",
+        "mid-back"
+      ],
       "whyHelps": "A restful fold that softens the low back and hips.",
       "steps": [
         "From hands and knees, sit the hips back toward the heels.",
@@ -198,14 +315,20 @@
         "Rest the forehead on the floor or a folded towel.",
         "Breathe into the back ribs."
       ],
-      "durationOrReps": "Hold 30–60 seconds",
+      "durationOrReps": "Hold 30\u201360 seconds",
       "cautions": "Widen the knees if needed. Skip or elevate with pillows if knees or ankles complain.",
-      "seeAProWhen": "You can’t get comfortable in any folded position due to back or knee pain."
+      "seeAProWhen": "You can\u2019t get comfortable in any folded position due to back or knee pain.",
+      "videoUrl": "https://www.youtube.com/watch?v=eqVMAPM00DM",
+      "imageUrl": null
     },
     {
       "id": "seated-twist",
       "name": "Seated open twist",
-      "regions": ["mid-back", "upper-back", "lower-back"],
+      "regions": [
+        "mid-back",
+        "upper-back",
+        "lower-back"
+      ],
       "whyHelps": "Gently rotates the torso to loosen mid-back stiffness from sitting.",
       "steps": [
         "Sit tall in a chair with feet flat.",
@@ -213,14 +336,20 @@
         "Exhale and rotate gently toward the chair-back hand.",
         "Switch sides."
       ],
-      "durationOrReps": "Hold 15–20 seconds each side, 2 rounds",
+      "durationOrReps": "Hold 15\u201320 seconds each side, 2 rounds",
       "cautions": "Twist from the mid-back, not by yanking the neck. Keep both sit bones down.",
-      "seeAProWhen": "Twisting causes sharp pain, dizziness, or arm tingling."
+      "seeAProWhen": "Twisting causes sharp pain, dizziness, or arm tingling.",
+      "videoUrl": null,
+      "imageUrl": "illust/seated-twist"
     },
     {
       "id": "thread-the-needle",
       "name": "Thread the needle",
-      "regions": ["mid-back", "upper-back", "shoulders"],
+      "regions": [
+        "mid-back",
+        "upper-back",
+        "shoulders"
+      ],
       "whyHelps": "Opens the upper and mid back and eases shoulder-blade tightness.",
       "steps": [
         "Start on hands and knees.",
@@ -228,73 +357,100 @@
         "Keep hips roughly over knees.",
         "Switch sides."
       ],
-      "durationOrReps": "Hold 20–30 seconds each side",
+      "durationOrReps": "Hold 20\u201330 seconds each side",
       "cautions": "Support the head with a towel if the neck feels strained.",
-      "seeAProWhen": "Shoulder or neck pain is sharp or you feel numbness in the arm."
+      "seeAProWhen": "Shoulder or neck pain is sharp or you feel numbness in the arm.",
+      "videoUrl": null,
+      "imageUrl": "illust/thread-the-needle"
     },
     {
       "id": "chest-opener-doorway",
       "name": "Doorway chest opener",
-      "regions": ["chest", "shoulders", "upper-back"],
+      "regions": [
+        "chest",
+        "shoulders",
+        "upper-back"
+      ],
       "whyHelps": "Opens the front of the chest and shoulders after hunching over a phone or desk.",
       "steps": [
         "Stand in a doorway with one forearm on the frame, elbow about shoulder height.",
         "Step the same-side foot forward and gently turn the chest away from the arm until you feel a stretch across the chest.",
         "Switch sides."
       ],
-      "durationOrReps": "Hold 20–30 seconds each side, 2 rounds",
-      "cautions": "Keep the shoulder blade settling down — don’t shrug. Use a light stretch only.",
-      "seeAProWhen": "Chest pain with activity, pressure, or shortness of breath needs urgent medical care — this stretch is not for that."
+      "durationOrReps": "Hold 20\u201330 seconds each side, 2 rounds",
+      "cautions": "Keep the shoulder blade settling down \u2014 don\u2019t shrug. Use a light stretch only.",
+      "seeAProWhen": "Chest pain with activity, pressure, or shortness of breath needs urgent medical care \u2014 this stretch is not for that.",
+      "videoUrl": "https://www.youtube.com/watch?v=NePr1XKRTLU",
+      "imageUrl": null
     },
     {
       "id": "hands-clasped-chest",
       "name": "Hands-clasped chest stretch",
-      "regions": ["chest", "shoulders"],
+      "regions": [
+        "chest",
+        "shoulders"
+      ],
       "whyHelps": "A simple no-equipment opener for the front of the shoulders and chest.",
       "steps": [
         "Stand or sit tall.",
-        "Clasp hands behind your back (or hold a towel if hands don’t meet).",
+        "Clasp hands behind your back (or hold a towel if hands don\u2019t meet).",
         "Gently lift the hands away from the back and open the chest.",
         "Keep the neck long."
       ],
-      "durationOrReps": "Hold 15–25 seconds, 2 rounds",
-      "cautions": "Don’t force the hands together; a towel bridge is fine.",
-      "seeAProWhen": "Shoulder pain with overhead reach or weakness lifting the arm."
+      "durationOrReps": "Hold 15\u201325 seconds, 2 rounds",
+      "cautions": "Don\u2019t force the hands together; a towel bridge is fine.",
+      "seeAProWhen": "Shoulder pain with overhead reach or weakness lifting the arm.",
+      "videoUrl": "https://www.youtube.com/watch?v=6jHsraw2NIk",
+      "imageUrl": null
     },
     {
       "id": "neck-side-bend",
       "name": "Neck side bend",
-      "regions": ["neck", "shoulders"],
+      "regions": [
+        "neck",
+        "shoulders"
+      ],
       "whyHelps": "Eases side-of-neck tightness from sleeping odd or looking at screens.",
       "steps": [
         "Sit or stand tall.",
         "Gently tip one ear toward the same shoulder.",
-        "Optionally rest the same-side hand lightly on the head — no pulling.",
+        "Optionally rest the same-side hand lightly on the head \u2014 no pulling.",
         "Switch sides."
       ],
-      "durationOrReps": "Hold 15–20 seconds each side, 2 rounds",
-      "cautions": "Keep the stretch mild. Don’t tip the head forward or backward while side-bending.",
-      "seeAProWhen": "Neck pain follows trauma, or you have dizziness, arm numbness, or severe headache."
+      "durationOrReps": "Hold 15\u201320 seconds each side, 2 rounds",
+      "cautions": "Keep the stretch mild. Don\u2019t tip the head forward or backward while side-bending.",
+      "seeAProWhen": "Neck pain follows trauma, or you have dizziness, arm numbness, or severe headache.",
+      "videoUrl": "https://www.youtube.com/watch?v=2NOsE-VPpkE",
+      "imageUrl": null
     },
     {
       "id": "chin-tuck",
       "name": "Chin tuck (gentle)",
-      "regions": ["neck", "upper-back"],
+      "regions": [
+        "neck",
+        "upper-back"
+      ],
       "whyHelps": "Reminds the neck of a stacked posture after forward-head sitting.",
       "steps": [
         "Sit tall looking straight ahead.",
         "Gently draw the chin straight back (like making a double chin), lengthening the back of the neck.",
         "Hold briefly, then release.",
-        "Keep the eyes level — don’t look down."
+        "Keep the eyes level \u2014 don\u2019t look down."
       ],
-      "durationOrReps": "5–8 slow reps, hold 3–5 seconds each",
+      "durationOrReps": "5\u20138 slow reps, hold 3\u20135 seconds each",
       "cautions": "Small movement only. Stop if you feel dizziness or sharp pain.",
-      "seeAProWhen": "Neck pain with headaches that don’t ease, or neurological symptoms."
+      "seeAProWhen": "Neck pain with headaches that don\u2019t ease, or neurological symptoms.",
+      "videoUrl": "https://www.youtube.com/watch?v=7rnlAVhAK-8",
+      "imageUrl": null
     },
     {
       "id": "shoulder-rolls",
       "name": "Shoulder rolls",
-      "regions": ["shoulders", "upper-back", "neck"],
+      "regions": [
+        "shoulders",
+        "upper-back",
+        "neck"
+      ],
       "whyHelps": "Warms the shoulder girdle and eases morning stiffness without a deep stretch.",
       "steps": [
         "Sit or stand tall.",
@@ -302,14 +458,19 @@
         "Then reverse: up, forward, and down.",
         "Breathe evenly."
       ],
-      "durationOrReps": "8–10 rolls each direction",
-      "cautions": "Keep the rolls smooth; don’t force a big circle if it pinches.",
-      "seeAProWhen": "Shoulder pain at night, with weakness, or after a fall."
+      "durationOrReps": "8\u201310 rolls each direction",
+      "cautions": "Keep the rolls smooth; don\u2019t force a big circle if it pinches.",
+      "seeAProWhen": "Shoulder pain at night, with weakness, or after a fall.",
+      "videoUrl": "https://www.youtube.com/watch?v=wT8gPa-6B-c",
+      "imageUrl": null
     },
     {
       "id": "cross-body-shoulder",
       "name": "Cross-body shoulder stretch",
-      "regions": ["shoulders", "upper-back"],
+      "regions": [
+        "shoulders",
+        "upper-back"
+      ],
       "whyHelps": "Gently stretches the back of the shoulder.",
       "steps": [
         "Bring one arm across the chest.",
@@ -317,14 +478,19 @@
         "Keep the shoulder down away from the ear.",
         "Switch sides."
       ],
-      "durationOrReps": "Hold 20–30 seconds each side",
+      "durationOrReps": "Hold 20\u201330 seconds each side",
       "cautions": "Pull on the upper arm, not by yanking the elbow. Stop if you feel pinching in the front of the shoulder.",
-      "seeAProWhen": "Pain with reaching behind the back or overhead persists for weeks."
+      "seeAProWhen": "Pain with reaching behind the back or overhead persists for weeks.",
+      "videoUrl": "https://www.youtube.com/watch?v=6jHsraw2NIk",
+      "imageUrl": null
     },
     {
       "id": "forearm-extensor",
       "name": "Forearm extensor stretch",
-      "regions": ["elbows-forearms", "wrists-hands"],
+      "regions": [
+        "elbows-forearms",
+        "wrists-hands"
+      ],
       "whyHelps": "Eases the top of the forearm and wrist after typing or gripping.",
       "steps": [
         "Extend one arm forward, elbow soft, palm down.",
@@ -332,14 +498,19 @@
         "Feel a stretch along the top of the forearm.",
         "Switch sides."
       ],
-      "durationOrReps": "Hold 15–25 seconds each side, 2 rounds",
-      "cautions": "Keep the stretch light; don’t lock the elbow hard.",
-      "seeAProWhen": "Pain, numbness, or weakness in the hand/wrist that doesn’t settle with rest."
+      "durationOrReps": "Hold 15\u201325 seconds each side, 2 rounds",
+      "cautions": "Keep the stretch light; don\u2019t lock the elbow hard.",
+      "seeAProWhen": "Pain, numbness, or weakness in the hand/wrist that doesn\u2019t settle with rest.",
+      "videoUrl": "https://www.youtube.com/watch?v=1KRtQppsUHc",
+      "imageUrl": null
     },
     {
       "id": "forearm-flexor",
       "name": "Forearm flexor stretch",
-      "regions": ["elbows-forearms", "wrists-hands"],
+      "regions": [
+        "elbows-forearms",
+        "wrists-hands"
+      ],
       "whyHelps": "Opens the underside of the forearm and wrist.",
       "steps": [
         "Extend one arm forward, palm up.",
@@ -347,14 +518,19 @@
         "Feel a stretch along the inner forearm.",
         "Switch sides."
       ],
-      "durationOrReps": "Hold 15–25 seconds each side, 2 rounds",
+      "durationOrReps": "Hold 15\u201325 seconds each side, 2 rounds",
       "cautions": "Go slow; wrists are sensitive. Stop if you feel tingling in the fingers.",
-      "seeAProWhen": "Nighttime hand numbness or grip weakness — ask a clinician."
+      "seeAProWhen": "Nighttime hand numbness or grip weakness \u2014 ask a clinician.",
+      "videoUrl": "https://www.youtube.com/watch?v=1KRtQppsUHc",
+      "imageUrl": null
     },
     {
       "id": "wrist-circles",
       "name": "Wrist circles",
-      "regions": ["wrists-hands", "elbows-forearms"],
+      "regions": [
+        "wrists-hands",
+        "elbows-forearms"
+      ],
       "whyHelps": "Warms the wrists with easy movement before a deeper stretch.",
       "steps": [
         "Hold arms relaxed in front or by your sides.",
@@ -362,43 +538,58 @@
         "Reverse direction.",
         "Keep the circles small if anything feels sticky."
       ],
-      "durationOrReps": "8–10 circles each direction",
+      "durationOrReps": "8\u201310 circles each direction",
       "cautions": "Pain-free range only.",
-      "seeAProWhen": "Wrist swelling, heat, or pain after a fall — get checked."
+      "seeAProWhen": "Wrist swelling, heat, or pain after a fall \u2014 get checked.",
+      "videoUrl": null,
+      "imageUrl": "illust/wrist-circles"
     },
     {
       "id": "finger-spread-open",
       "name": "Finger spread and open",
-      "regions": ["wrists-hands"],
+      "regions": [
+        "wrists-hands"
+      ],
       "whyHelps": "Loosens stiff hands after sleep or gripping.",
       "steps": [
         "Make a soft fist, then open the hand wide and spread the fingers.",
         "Optionally touch thumb to each fingertip lightly.",
         "Repeat on both hands."
       ],
-      "durationOrReps": "8–10 open-and-close cycles per hand",
-      "cautions": "Stay gentle; don’t force knuckles that feel swollen.",
-      "seeAProWhen": "Joint swelling, redness, or morning stiffness that lasts hours — worth a clinical check."
+      "durationOrReps": "8\u201310 open-and-close cycles per hand",
+      "cautions": "Stay gentle; don\u2019t force knuckles that feel swollen.",
+      "seeAProWhen": "Joint swelling, redness, or morning stiffness that lasts hours \u2014 worth a clinical check.",
+      "videoUrl": null,
+      "imageUrl": "illust/finger-spread-open"
     },
     {
       "id": "standing-side-reach",
       "name": "Standing side reach",
-      "regions": ["abs", "mid-back", "chest"],
-      "whyHelps": "Lengthens the side body and eases a “tight trunk” feeling.",
+      "regions": [
+        "abs",
+        "mid-back",
+        "chest"
+      ],
+      "whyHelps": "Lengthens the side body and eases a \u201ctight trunk\u201d feeling.",
       "steps": [
         "Stand with feet hip-width.",
         "Reach one arm overhead and lean gently to the opposite side.",
         "Keep both feet grounded.",
         "Switch sides."
       ],
-      "durationOrReps": "Hold 15–20 seconds each side, 2 rounds",
-      "cautions": "Don’t collapse forward; lean sideways only. Skip if you feel dizzy.",
-      "seeAProWhen": "Abdominal pain is severe, with fever, or after trauma — seek care, don’t stretch through it."
+      "durationOrReps": "Hold 15\u201320 seconds each side, 2 rounds",
+      "cautions": "Don\u2019t collapse forward; lean sideways only. Skip if you feel dizzy.",
+      "seeAProWhen": "Abdominal pain is severe, with fever, or after trauma \u2014 seek care, don\u2019t stretch through it.",
+      "videoUrl": null,
+      "imageUrl": "illust/standing-side-reach"
     },
     {
       "id": "prone-press-up",
       "name": "Gentle prone press-up",
-      "regions": ["abs", "lower-back"],
+      "regions": [
+        "abs",
+        "lower-back"
+      ],
       "whyHelps": "A mild belly-down extension that some people find soothing for morning stiffness (keep it small).",
       "steps": [
         "Lie on your stomach with hands under the shoulders.",
@@ -406,28 +597,39 @@
         "Keep the neck long; look at the floor a few inches ahead.",
         "Lower slowly."
       ],
-      "durationOrReps": "5–8 gentle reps, or hold 5–10 seconds",
+      "durationOrReps": "5\u20138 gentle reps, or hold 5\u201310 seconds",
       "cautions": "Very small range. Stop if low-back pain increases or shoots into a leg.",
-      "seeAProWhen": "Back pain with leg symptoms, or pain that worsens with bending backward."
+      "seeAProWhen": "Back pain with leg symptoms, or pain that worsens with bending backward.",
+      "videoUrl": null,
+      "imageUrl": "illust/prone-press-up"
     },
     {
       "id": "ankle-circles",
       "name": "Ankle circles",
-      "regions": ["ankles", "soles-feet"],
+      "regions": [
+        "ankles",
+        "soles-feet"
+      ],
       "whyHelps": "Warms stiff ankles before standing or walking.",
       "steps": [
         "Sit and lift one foot slightly off the floor.",
         "Circle the ankle slowly clockwise, then counterclockwise.",
         "Switch feet."
       ],
-      "durationOrReps": "8–10 circles each direction per foot",
+      "durationOrReps": "8\u201310 circles each direction per foot",
       "cautions": "Move in a pain-free range; support the leg if needed.",
-      "seeAProWhen": "Ankle swelling after a twist, or inability to bear weight."
+      "seeAProWhen": "Ankle swelling after a twist, or inability to bear weight.",
+      "videoUrl": "https://www.youtube.com/watch?v=mzTQGYGI0Ng",
+      "imageUrl": null
     },
     {
       "id": "ankle-dorsiflex-wall",
       "name": "Ankle dorsiflexion at wall",
-      "regions": ["ankles", "calves", "knees"],
+      "regions": [
+        "ankles",
+        "calves",
+        "knees"
+      ],
       "whyHelps": "Improves the bend of the ankle that helps stairs and squatting feel easier.",
       "steps": [
         "Face a wall in a short lunge with the front foot a few inches from the wall.",
@@ -435,29 +637,40 @@
         "Stop when you feel a stretch in the ankle/calf, not pain in the knee.",
         "Switch sides."
       ],
-      "durationOrReps": "8–10 gentle pulses or hold 20 seconds each side",
-      "cautions": "Heel stays down. Don’t force the knee inward or outward.",
-      "seeAProWhen": "Ankle or knee pain with stairs that doesn’t ease after a few easy days."
+      "durationOrReps": "8\u201310 gentle pulses or hold 20 seconds each side",
+      "cautions": "Heel stays down. Don\u2019t force the knee inward or outward.",
+      "seeAProWhen": "Ankle or knee pain with stairs that doesn\u2019t ease after a few easy days.",
+      "videoUrl": null,
+      "imageUrl": "illust/ankle-dorsiflex-wall"
     },
     {
       "id": "seated-knee-extension",
       "name": "Seated knee extension (easy)",
-      "regions": ["knees", "quads"],
-      "whyHelps": "Gently wakes the thigh and knee after sitting — mobility, not a deep stretch.",
+      "regions": [
+        "knees",
+        "quads"
+      ],
+      "whyHelps": "Gently wakes the thigh and knee after sitting \u2014 mobility, not a deep stretch.",
       "steps": [
         "Sit tall in a chair.",
         "Slowly straighten one knee, flex the foot gently, hold briefly.",
         "Lower with control.",
         "Switch sides."
       ],
-      "durationOrReps": "8–10 slow reps each side",
-      "cautions": "Stay in a comfortable range; don’t snap the knee straight.",
-      "seeAProWhen": "Knee locks, gives way, or swells after activity."
+      "durationOrReps": "8\u201310 slow reps each side",
+      "cautions": "Stay in a comfortable range; don\u2019t snap the knee straight.",
+      "seeAProWhen": "Knee locks, gives way, or swells after activity.",
+      "videoUrl": "https://www.youtube.com/watch?v=VuJZ6dqMf8M",
+      "imageUrl": null
     },
     {
       "id": "heel-slides",
       "name": "Heel slides",
-      "regions": ["knees", "quads", "hamstrings"],
+      "regions": [
+        "knees",
+        "quads",
+        "hamstrings"
+      ],
       "whyHelps": "Easy on-the-floor knee bending and straightening for morning stiffness.",
       "steps": [
         "Lie on your back.",
@@ -465,32 +678,189 @@
         "Slide it back out to straighten.",
         "Switch sides."
       ],
-      "durationOrReps": "8–10 slow reps each side",
+      "durationOrReps": "8\u201310 slow reps each side",
       "cautions": "Use a towel under the heel on carpet if it sticks. Pain-free range only.",
-      "seeAProWhen": "Knee can’t bend or straighten after injury — get evaluated."
+      "seeAProWhen": "Knee can\u2019t bend or straighten after injury \u2014 get evaluated.",
+      "videoUrl": "https://www.youtube.com/watch?v=6-anByqnKp8",
+      "imageUrl": null
+    },
+    {
+      "id": "standing-it-band",
+      "name": "Standing IT-band stretch (wall)",
+      "regions": [
+        "it-band",
+        "hips-glutes"
+      ],
+      "whyHelps": "Gently lengthens the outer hip and thigh tissues that can feel tight along the IT band after sitting or walking.",
+      "steps": [
+        "Stand sideways a few inches from a wall, affected side toward the wall.",
+        "Cross the near leg behind the far leg.",
+        "Lean the hip gently toward the wall until you feel a mild stretch on the outer thigh/hip.",
+        "Keep the torso upright; switch sides."
+      ],
+      "durationOrReps": "Hold 20\u201330 seconds each side, 2 rounds",
+      "cautions": "Use a light stretch only; don\u2019t collapse the low back or twist sharply.",
+      "seeAProWhen": "Outer-knee or hip pain is sharp, swollen, or worse with every step.",
+      "videoUrl": "https://www.youtube.com/watch?v=T5CYbfByXPo",
+      "imageUrl": null
+    },
+    {
+      "id": "seated-figure-four-itb",
+      "name": "Seated figure-four (outer hip / ITB)",
+      "regions": [
+        "it-band",
+        "hips-glutes"
+      ],
+      "whyHelps": "Opens the outer hip and glute area that often contribute to IT-band\u2013area stiffness \u2014 easy to do in a chair.",
+      "steps": [
+        "Sit tall in a sturdy chair with feet flat.",
+        "Cross one ankle over the opposite thigh (figure 4).",
+        "Keep a long spine and hinge forward slightly from the hips until you feel a stretch in the outer hip/glute.",
+        "Switch sides."
+      ],
+      "durationOrReps": "Hold 20\u201330 seconds each side, 2 rounds",
+      "cautions": "Hinge from the hips; don\u2019t round hard through the low back. Ease off if the knee pinches.",
+      "seeAProWhen": "Hip or outer-thigh pain is sharp, or you have numbness down the leg.",
+      "videoUrl": "https://www.youtube.com/watch?v=4UoITjubrgE",
+      "imageUrl": null
+    },
+    {
+      "id": "side-lying-it-band",
+      "name": "Side-lying IT-band stretch",
+      "regions": [
+        "it-band",
+        "hips-glutes"
+      ],
+      "whyHelps": "A supported outer-thigh stretch that targets tissues along the IT band with less balance demand.",
+      "steps": [
+        "Lie on your side with the leg you want to stretch on top.",
+        "Keep hips stacked; gently bring the top leg slightly behind you.",
+        "Slowly lower the top leg toward the floor behind you until you feel a mild outer-thigh stretch.",
+        "Hold, then switch sides."
+      ],
+      "durationOrReps": "Hold 20\u201330 seconds each side, 2 rounds",
+      "cautions": "Keep the motion small and pain-free; support the head with a pillow if the neck complains.",
+      "seeAProWhen": "Outer-knee clicking with pain, swelling, or weakness when climbing stairs.",
+      "videoUrl": "https://www.youtube.com/watch?v=d4NhfoFP4Kw",
+      "imageUrl": null
     }
   ],
   "regionToStretchIds": {
-    "soles-feet": ["standing-calf-wall", "seated-soleus", "plantar-roll", "ankle-circles"],
-    "calves": ["standing-calf-wall", "seated-soleus", "ankle-dorsiflex-wall"],
-    "quads": ["standing-quad", "side-lying-quad", "kneeling-hip-flexor", "seated-knee-extension", "heel-slides"],
-    "hamstrings": ["seated-hamstring", "supine-hamstring-strap", "heel-slides"],
-    "hips-glutes": ["figure-four", "kneeling-hip-flexor", "knee-to-chest", "childs-pose"],
-    "lower-back": ["knee-to-chest", "cat-cow", "childs-pose", "seated-hamstring", "figure-four", "kneeling-hip-flexor", "prone-press-up"],
-    "mid-back": ["cat-cow", "seated-twist", "thread-the-needle", "childs-pose", "standing-side-reach"],
-    "upper-back": ["cat-cow", "thread-the-needle", "chest-opener-doorway", "chin-tuck", "shoulder-rolls", "cross-body-shoulder"],
-    "neck": ["neck-side-bend", "chin-tuck", "shoulder-rolls"],
-    "shoulders": ["shoulder-rolls", "cross-body-shoulder", "chest-opener-doorway", "hands-clasped-chest", "thread-the-needle", "neck-side-bend"],
-    "elbows-forearms": ["forearm-extensor", "forearm-flexor", "wrist-circles"],
-    "wrists-hands": ["forearm-extensor", "forearm-flexor", "wrist-circles", "finger-spread-open"],
-    "chest": ["chest-opener-doorway", "hands-clasped-chest", "standing-side-reach"],
-    "abs": ["standing-side-reach", "prone-press-up"],
-    "knees": ["standing-quad", "side-lying-quad", "seated-hamstring", "supine-hamstring-strap", "seated-knee-extension", "heel-slides", "ankle-dorsiflex-wall"],
-    "ankles": ["standing-calf-wall", "seated-soleus", "ankle-circles", "ankle-dorsiflex-wall"]
+    "soles-feet": [
+      "standing-calf-wall",
+      "seated-soleus",
+      "plantar-roll",
+      "ankle-circles"
+    ],
+    "calves": [
+      "standing-calf-wall",
+      "seated-soleus",
+      "ankle-dorsiflex-wall"
+    ],
+    "quads": [
+      "standing-quad",
+      "side-lying-quad",
+      "kneeling-hip-flexor",
+      "seated-knee-extension",
+      "heel-slides"
+    ],
+    "hamstrings": [
+      "seated-hamstring",
+      "supine-hamstring-strap",
+      "heel-slides"
+    ],
+    "hips-glutes": [
+      "figure-four",
+      "kneeling-hip-flexor",
+      "knee-to-chest",
+      "childs-pose",
+      "standing-it-band",
+      "seated-figure-four-itb",
+      "side-lying-it-band"
+    ],
+    "lower-back": [
+      "knee-to-chest",
+      "cat-cow",
+      "childs-pose",
+      "seated-hamstring",
+      "figure-four",
+      "kneeling-hip-flexor",
+      "prone-press-up"
+    ],
+    "mid-back": [
+      "cat-cow",
+      "seated-twist",
+      "thread-the-needle",
+      "childs-pose",
+      "standing-side-reach"
+    ],
+    "upper-back": [
+      "cat-cow",
+      "thread-the-needle",
+      "chest-opener-doorway",
+      "chin-tuck",
+      "shoulder-rolls",
+      "cross-body-shoulder"
+    ],
+    "neck": [
+      "neck-side-bend",
+      "chin-tuck",
+      "shoulder-rolls"
+    ],
+    "shoulders": [
+      "shoulder-rolls",
+      "cross-body-shoulder",
+      "chest-opener-doorway",
+      "hands-clasped-chest",
+      "thread-the-needle",
+      "neck-side-bend"
+    ],
+    "elbows-forearms": [
+      "forearm-extensor",
+      "forearm-flexor",
+      "wrist-circles"
+    ],
+    "wrists-hands": [
+      "forearm-extensor",
+      "forearm-flexor",
+      "wrist-circles",
+      "finger-spread-open"
+    ],
+    "chest": [
+      "chest-opener-doorway",
+      "hands-clasped-chest",
+      "standing-side-reach"
+    ],
+    "abs": [
+      "standing-side-reach",
+      "prone-press-up"
+    ],
+    "knees": [
+      "standing-quad",
+      "side-lying-quad",
+      "seated-hamstring",
+      "supine-hamstring-strap",
+      "seated-knee-extension",
+      "heel-slides",
+      "ankle-dorsiflex-wall"
+    ],
+    "ankles": [
+      "standing-calf-wall",
+      "seated-soleus",
+      "ankle-circles",
+      "ankle-dorsiflex-wall"
+    ],
+    "it-band": [
+      "standing-it-band",
+      "seated-figure-four-itb",
+      "side-lying-it-band",
+      "figure-four",
+      "kneeling-hip-flexor"
+    ]
   },
   "notesForEngineering": {
     "genderBodies": "Male and female body models can share this stretch mapping unless a future anatomy-specific exception is added.",
-    "tapFlowExample": "Tap soles-feet → suggest standing-calf-wall and plantar-roll first.",
+    "tapFlowExample": "Tap soles-feet \u2192 suggest standing-calf-wall and plantar-roll first.",
     "tone": "Present as gentle morning mobility suggestions, never as diagnosis."
   }
 }

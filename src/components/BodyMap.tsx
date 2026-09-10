@@ -12,16 +12,27 @@ interface Props {
   onChangeBody: () => void
 }
 
-const VIEWS: ViewAngle[] = ['front', 'side', 'back']
-const VIEW_YAW: Record<ViewAngle, number> = { front: 0, side: 90, back: 180 }
+const VIEWS: ViewAngle[] = ['front', 'three-quarter', 'side', 'back']
+const VIEW_YAW: Record<ViewAngle, number> = {
+  front: 0,
+  'three-quarter': 45,
+  side: 90,
+  back: 180,
+}
+const VIEW_LABEL: Record<ViewAngle, string> = {
+  front: 'Front',
+  'three-quarter': '¾',
+  side: 'Side',
+  back: 'Back',
+}
 
 function nearestView(yaw: number): ViewAngle {
-  // normalize 0..360
   let y = ((yaw % 360) + 360) % 360
   if (y > 180) y -= 360
-  // compare to 0, 90, 180 (and -90 as side alias)
   const candidates: { view: ViewAngle; a: number }[] = [
     { view: 'front', a: 0 },
+    { view: 'three-quarter', a: 45 },
+    { view: 'three-quarter', a: -45 },
     { view: 'side', a: 90 },
     { view: 'side', a: -90 },
     { view: 'back', a: 180 },
@@ -55,13 +66,10 @@ export function BodyMap({
   const moved = useRef(false)
   const reduceMotion = usePrefersReducedMotion()
 
-  const snapTo = useCallback(
-    (next: ViewAngle) => {
-      setView(next)
-      setDragYaw(VIEW_YAW[next])
-    },
-    [],
-  )
+  const snapTo = useCallback((next: ViewAngle) => {
+    setView(next)
+    setDragYaw(VIEW_YAW[next])
+  }, [])
 
   const onPointerDown = (e: ReactPointerEvent) => {
     ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
@@ -75,20 +83,15 @@ export function BodyMap({
     if (!dragging) return
     const dx = e.clientX - startX.current
     if (Math.abs(dx) > 8) moved.current = true
-    // drag left → show side/back (positive yaw)
-    const next = startYaw.current + dx * 0.6
+    const next = startYaw.current + dx * 0.55
     setDragYaw(next)
-    if (!reduceMotion) {
-      // live preview snap hint
-      setView(nearestView(next))
-    }
+    if (!reduceMotion) setView(nearestView(next))
   }
 
   const onPointerUp = () => {
     if (!dragging) return
     setDragging(false)
-    const snapped = nearestView(dragYaw)
-    snapTo(snapped)
+    snapTo(nearestView(dragYaw))
   }
 
   const hasSpots = selected.size > 0
@@ -109,7 +112,7 @@ export function BodyMap({
               className={`pill${view === v ? ' active' : ''}`}
               onClick={() => snapTo(v)}
             >
-              {v.charAt(0).toUpperCase() + v.slice(1)}
+              {VIEW_LABEL[v]}
             </button>
           ))}
         </div>
@@ -128,7 +131,7 @@ export function BodyMap({
             reduceMotion
               ? undefined
               : {
-                  transform: `perspective(800px) rotateY(${-dragYaw}deg)`,
+                  transform: `perspective(900px) rotateY(${-dragYaw}deg)`,
                 }
           }
         >
@@ -142,7 +145,7 @@ export function BodyMap({
             }}
           />
         </div>
-        <p className="drag-hint">Drag to spin · Front / Side / Back</p>
+        <p className="drag-hint">Drag to spin · Front / ¾ / Side / Back</p>
       </div>
 
       <div className="body-footer">
@@ -153,7 +156,7 @@ export function BodyMap({
         ) : (
           <div className="empty-copy">
             <p className="empty-title">Where does it hurt?</p>
-            <p className="empty-sub">Spin the body, then tap the sore spots.</p>
+            <p className="empty-sub">Spin for the sides — tap where it hurts.</p>
           </div>
         )}
 

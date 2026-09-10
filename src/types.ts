@@ -2,7 +2,7 @@ export type Gender = 'male' | 'female'
 
 export type Screen = 'gender' | 'body' | 'stretches'
 
-export type ViewAngle = 'front' | 'side' | 'back'
+export type ViewAngle = 'front' | 'three-quarter' | 'side' | 'back'
 
 export interface Region {
   id: string
@@ -19,6 +19,9 @@ export interface Stretch {
   durationOrReps: string
   cautions: string
   seeAProWhen?: string
+  videoUrl?: string | null
+  imageUrl?: string | null
+  illustrationKey?: string
 }
 
 export interface Catalog {

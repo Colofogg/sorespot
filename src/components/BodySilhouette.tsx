@@ -9,84 +9,186 @@ interface Props {
 
 type Hotspot = { id: string; d: string; label: string }
 
-/** Large thumb-friendly hotspot paths in a shared 200x480 body viewBox. */
 function hotspotsFor(view: ViewAngle, gender: Gender): Hotspot[] {
-  const wide = gender === 'male'
-  // Shoulder / hip width tweaks are baked into path coordinates below via offsets
-  const sx = wide ? 0 : 2 // slight inward for female torso top
-  const hx = wide ? 0 : -3 // wider hips female (negative = expand outward via path design)
+  const male = gender === 'male'
+  // Athletic female: slightly narrower shoulders, natural waist→hip (not heavy)
+  const sx = male ? 0 : 3
+  const hx = male ? 0 : -2 // mild hip widen vs waist, not exaggerated
 
   if (view === 'front') {
     return [
-      { id: 'neck', label: 'Neck', d: `M${88 + sx} 72 L${112 - sx} 72 L${110 - sx} 95 L${90 + sx} 95 Z` },
-      { id: 'shoulders', label: 'Shoulders', d: `M${55 + sx} 95 L${145 - sx} 95 L${150 - sx} 125 L${130 - sx} 130 L${100} 118 L${70 + sx} 130 L${50 + sx} 125 Z` },
-      { id: 'chest', label: 'Chest', d: `M${70 + sx} 125 L${130 - sx} 125 L${128 - sx} 175 L${72 + sx} 175 Z` },
-      { id: 'abs', label: 'Abs', d: `M${74 + sx} 175 L${126 - sx} 175 L${122 - sx} 235 L${78 + sx} 235 Z` },
-      { id: 'hips-glutes', label: 'Hips / glutes', d: `M${72 + hx} 230 L${128 - hx} 230 L${135 - hx} 275 L${65 + hx} 275 Z` },
-      { id: 'quads', label: 'Quads', d: 'M68 275 L100 275 L98 360 L72 360 Z M100 275 L132 275 L128 360 L102 360 Z' },
-      { id: 'knees', label: 'Knees', d: 'M70 355 L98 355 L96 390 L72 390 Z M102 355 L130 355 L128 390 L104 390 Z' },
-      { id: 'calves', label: 'Calves', d: 'M72 388 L96 388 L94 445 L74 445 Z M104 388 L128 388 L126 445 L106 445 Z' },
-      { id: 'ankles', label: 'Ankles', d: 'M74 442 L94 442 L93 458 L75 458 Z M106 442 L126 442 L125 458 L107 458 Z' },
-      { id: 'soles-feet', label: 'Soles / feet', d: 'M68 456 L98 456 L100 475 L66 475 Z M102 456 L132 456 L134 475 L100 475 Z' },
-      { id: 'elbows-forearms', label: 'Elbows / forearms', d: `M${38 + sx} 150 L${58 + sx} 145 L${48 + sx} 220 L${28 + sx} 225 Z M${142 - sx} 145 L${162 - sx} 150 L${172 - sx} 225 L${152 - sx} 220 Z` },
-      { id: 'wrists-hands', label: 'Wrists / hands', d: `M${24 + sx} 220 L${48 + sx} 218 L${42 + sx} 255 L${18 + sx} 258 Z M${152 - sx} 218 L${176 - sx} 220 L${182 - sx} 258 L${158 - sx} 255 Z` },
+      { id: 'neck', label: 'Neck', d: `M${90 + sx} 70 L${110 - sx} 70 L${108 - sx} 92 L${92 + sx} 92 Z` },
+      { id: 'traps', label: 'Traps', d: `M${72 + sx} 88 L${128 - sx} 88 L${140 - sx} 108 L${118 - sx} 112 L${100} 100 L${82 + sx} 112 L${60 + sx} 108 Z` },
+      { id: 'shoulders', label: 'Shoulders', d: `M${52 + sx} 100 L${148 - sx} 100 L${152 - sx} 128 L${128 - sx} 132 L${100} 118 L${72 + sx} 132 L${48 + sx} 128 Z` },
+      { id: 'chest', label: 'Chest', d: `M${72 + sx} 125 L${128 - sx} 125 L${126 - sx} 172 L${74 + sx} 172 Z` },
+      { id: 'abs', label: 'Abs', d: `M${76 + sx} 170 L${124 - sx} 170 L${120 - sx} 228 L${80 + sx} 228 Z` },
+      { id: 'hips-glutes-l', label: 'Left hip / glute', d: `M${68 + hx} 224 L${100} 224 L${100} 272 L${62 + hx} 268 Z` },
+      { id: 'hips-glutes-r', label: 'Right hip / glute', d: `M${100} 224 L${132 - hx} 224 L${138 - hx} 268 L${100} 272 Z` },
+      { id: 'quads-l', label: 'Left quads', d: 'M66 270 L98 272 L96 348 L70 346 Z' },
+      { id: 'quads-r', label: 'Right quads', d: 'M102 272 L134 270 L130 346 L104 348 Z' },
+      { id: 'it-band-l', label: 'Outer thigh (IT band)', d: 'M58 278 L70 276 L68 350 L54 348 Z' },
+      { id: 'it-band-r', label: 'Outer thigh (IT band)', d: 'M130 276 L142 278 L146 348 L132 350 Z' },
+      { id: 'knees-l', label: 'Left knee', d: 'M70 344 L96 346 L94 378 L72 376 Z' },
+      { id: 'knees-r', label: 'Right knee', d: 'M104 346 L130 344 L128 376 L106 378 Z' },
+      { id: 'calves-l', label: 'Left calf', d: 'M72 376 L94 378 L92 438 L74 436 Z' },
+      { id: 'calves-r', label: 'Right calf', d: 'M106 378 L128 376 L126 436 L108 438 Z' },
+      { id: 'ankles-l', label: 'Left ankle', d: 'M74 434 L92 436 L91 452 L75 450 Z' },
+      { id: 'ankles-r', label: 'Right ankle', d: 'M108 436 L126 434 L125 450 L109 452 Z' },
+      { id: 'soles-feet', label: 'Soles / feet', d: 'M68 450 L98 452 L100 472 L66 470 Z M102 452 L132 450 L134 470 L100 472 Z' },
+      { id: 'elbows-forearms', label: 'Elbows / forearms', d: `M${34 + sx} 148 L${54 + sx} 142 L${46 + sx} 218 L${26 + sx} 222 Z M${146 - sx} 142 L${166 - sx} 148 L${174 - sx} 222 L${154 - sx} 218 Z` },
+      { id: 'wrists-hands', label: 'Wrists / hands', d: `M${22 + sx} 218 L${46 + sx} 216 L${40 + sx} 252 L${16 + sx} 254 Z M${154 - sx} 216 L${178 - sx} 218 L${184 - sx} 254 L${160 - sx} 252 Z` },
+    ]
+  }
+
+  if (view === 'three-quarter') {
+    // Right-facing ¾: outer (right) IT band more visible
+    return [
+      { id: 'neck', label: 'Neck', d: 'M94 70 L114 72 L112 94 L96 92 Z' },
+      { id: 'traps', label: 'Traps', d: 'M78 90 L130 94 L138 112 L118 116 L100 104 L84 112 L70 108 Z' },
+      { id: 'shoulders', label: 'Shoulders', d: 'M60 102 L145 108 L148 132 L128 136 L100 122 L72 132 L56 128 Z' },
+      { id: 'chest', label: 'Chest', d: 'M70 128 L118 130 L116 175 L72 172 Z' },
+      { id: 'upper-back', label: 'Upper back', d: 'M116 125 L142 128 L138 170 L116 168 Z' },
+      { id: 'abs', label: 'Abs', d: 'M74 172 L114 174 L112 228 L78 226 Z' },
+      { id: 'lower-back', label: 'Lower back', d: 'M112 210 L136 214 L134 250 L110 248 Z' },
+      { id: 'hips-glutes-l', label: 'Left hip / glute', d: 'M70 224 L100 228 L98 272 L66 268 Z' },
+      { id: 'hips-glutes-r', label: 'Right hip / glute', d: 'M100 228 L138 232 L140 274 L100 272 Z' },
+      { id: 'quads-l', label: 'Left quads', d: 'M68 270 L96 274 L94 348 L70 344 Z' },
+      { id: 'quads-r', label: 'Right quads', d: 'M98 274 L130 276 L128 350 L100 348 Z' },
+      { id: 'it-band-r', label: 'Outer thigh (IT band)', d: 'M128 278 L146 280 L148 352 L132 350 Z' },
+      { id: 'it-band-l', label: 'Outer thigh (IT band)', d: 'M60 276 L70 274 L68 346 L56 344 Z' },
+      { id: 'hamstrings-r', label: 'Right hamstring', d: 'M122 300 L136 302 L134 348 L120 346 Z' },
+      { id: 'knees-l', label: 'Left knee', d: 'M70 342 L94 346 L92 378 L72 374 Z' },
+      { id: 'knees-r', label: 'Right knee', d: 'M100 346 L128 348 L126 378 L102 376 Z' },
+      { id: 'calves-l', label: 'Left calf', d: 'M72 374 L92 376 L90 436 L74 434 Z' },
+      { id: 'calves-r', label: 'Right calf', d: 'M104 376 L126 378 L124 438 L106 436 Z' },
+      { id: 'ankles-l', label: 'Left ankle', d: 'M74 432 L90 434 L89 450 L75 448 Z' },
+      { id: 'ankles-r', label: 'Right ankle', d: 'M106 436 L124 438 L123 452 L107 450 Z' },
+      { id: 'soles-feet', label: 'Soles / feet', d: 'M68 448 L96 450 L98 470 L66 468 Z M102 450 L130 452 L132 470 L100 468 Z' },
+      { id: 'elbows-forearms', label: 'Elbows / forearms', d: 'M42 150 L60 146 L54 218 L34 220 Z M140 148 L158 152 L164 220 L146 216 Z' },
+      { id: 'wrists-hands', label: 'Wrists / hands', d: 'M30 216 L52 214 L48 250 L24 252 Z M146 214 L168 218 L172 252 L150 248 Z' },
     ]
   }
 
   if (view === 'back') {
     return [
-      { id: 'neck', label: 'Neck', d: `M${88 + sx} 72 L${112 - sx} 72 L${110 - sx} 95 L${90 + sx} 95 Z` },
-      { id: 'shoulders', label: 'Shoulders', d: `M${55 + sx} 95 L${145 - sx} 95 L${150 - sx} 125 L${130 - sx} 130 L${100} 118 L${70 + sx} 130 L${50 + sx} 125 Z` },
-      { id: 'upper-back', label: 'Upper back', d: `M${70 + sx} 120 L${130 - sx} 120 L${128 - sx} 170 L${72 + sx} 170 Z` },
-      { id: 'mid-back', label: 'Mid back', d: `M${72 + sx} 168 L${128 - sx} 168 L${124 - sx} 215 L${76 + sx} 215 Z` },
-      { id: 'lower-back', label: 'Lower back', d: `M${74 + sx} 212 L${126 - sx} 212 L${130 - hx} 255 L${70 + hx} 255 Z` },
-      { id: 'hips-glutes', label: 'Hips / glutes', d: `M${68 + hx} 250 L${132 - hx} 250 L${138 - hx} 300 L${62 + hx} 300 Z` },
-      { id: 'hamstrings', label: 'Hamstrings', d: 'M68 298 L100 298 L98 365 L72 365 Z M100 298 L132 298 L128 365 L102 365 Z' },
-      { id: 'knees', label: 'Knees', d: 'M70 360 L98 360 L96 390 L72 390 Z M102 360 L130 360 L128 390 L104 390 Z' },
-      { id: 'calves', label: 'Calves', d: 'M72 388 L96 388 L94 445 L74 445 Z M104 388 L128 388 L126 445 L106 445 Z' },
-      { id: 'ankles', label: 'Ankles', d: 'M74 442 L94 442 L93 458 L75 458 Z M106 442 L126 442 L125 458 L107 458 Z' },
-      { id: 'soles-feet', label: 'Soles / feet', d: 'M68 456 L98 456 L100 475 L66 475 Z M102 456 L132 456 L134 475 L100 475 Z' },
-      { id: 'elbows-forearms', label: 'Elbows / forearms', d: `M${38 + sx} 150 L${58 + sx} 145 L${48 + sx} 220 L${28 + sx} 225 Z M${142 - sx} 145 L${162 - sx} 150 L${172 - sx} 225 L${152 - sx} 220 Z` },
+      { id: 'neck', label: 'Neck', d: `M${90 + sx} 70 L${110 - sx} 70 L${108 - sx} 92 L${92 + sx} 92 Z` },
+      { id: 'traps', label: 'Traps', d: `M${70 + sx} 90 L${130 - sx} 90 L${142 - sx} 112 L${118 - sx} 116 L${100} 102 L${82 + sx} 116 L${58 + sx} 112 Z` },
+      { id: 'shoulders', label: 'Shoulders', d: `M${52 + sx} 100 L${148 - sx} 100 L${152 - sx} 128 L${128 - sx} 132 L${100} 118 L${72 + sx} 132 L${48 + sx} 128 Z` },
+      { id: 'upper-back', label: 'Upper back', d: `M${72 + sx} 120 L${128 - sx} 120 L${126 - sx} 168 L${74 + sx} 168 Z` },
+      { id: 'mid-back', label: 'Mid back', d: `M${74 + sx} 166 L${126 - sx} 166 L${122 - sx} 212 L${78 + sx} 212 Z` },
+      { id: 'lower-back', label: 'Lower back', d: `M${76 + sx} 210 L${124 - sx} 210 L${128 - hx} 250 L${72 + hx} 250 Z` },
+      { id: 'hips-glutes-l', label: 'Left hip / glute', d: `M${64 + hx} 246 L${100} 248 L${100} 298 L${58 + hx} 292 Z` },
+      { id: 'hips-glutes-r', label: 'Right hip / glute', d: `M${100} 248 L${136 - hx} 246 L${142 - hx} 292 L${100} 298 Z` },
+      { id: 'hamstrings-l', label: 'Left hamstring', d: 'M66 296 L98 298 L96 358 L70 356 Z' },
+      { id: 'hamstrings-r', label: 'Right hamstring', d: 'M102 298 L134 296 L130 356 L104 358 Z' },
+      { id: 'it-band-l', label: 'Outer thigh (IT band)', d: 'M54 300 L68 298 L66 360 L52 358 Z' },
+      { id: 'it-band-r', label: 'Outer thigh (IT band)', d: 'M132 298 L146 300 L148 358 L134 360 Z' },
+      { id: 'knees-l', label: 'Left knee', d: 'M70 354 L96 356 L94 384 L72 382 Z' },
+      { id: 'knees-r', label: 'Right knee', d: 'M104 356 L130 354 L128 382 L106 384 Z' },
+      { id: 'calves-l', label: 'Left calf', d: 'M72 380 L94 382 L92 438 L74 436 Z' },
+      { id: 'calves-r', label: 'Right calf', d: 'M106 382 L128 380 L126 436 L108 438 Z' },
+      { id: 'ankles-l', label: 'Left ankle', d: 'M74 434 L92 436 L91 452 L75 450 Z' },
+      { id: 'ankles-r', label: 'Right ankle', d: 'M108 436 L126 434 L125 450 L109 452 Z' },
+      { id: 'soles-feet', label: 'Soles / feet', d: 'M68 450 L98 452 L100 472 L66 470 Z M102 452 L132 450 L134 470 L100 472 Z' },
+      { id: 'elbows-forearms', label: 'Elbows / forearms', d: `M${34 + sx} 148 L${54 + sx} 142 L${46 + sx} 218 L${26 + sx} 222 Z M${146 - sx} 142 L${166 - sx} 148 L${174 - sx} 222 L${154 - sx} 218 Z` },
     ]
   }
 
-  // side view (right profile)
+  // side (right profile) — IT band on outer (visible) thigh
   return [
-    { id: 'neck', label: 'Neck', d: 'M88 70 L112 72 L110 98 L90 96 Z' },
-    { id: 'shoulders', label: 'Shoulders', d: 'M78 95 L120 92 L125 130 L85 135 Z' },
-    { id: 'chest', label: 'Chest', d: 'M70 125 L105 120 L108 175 L68 180 Z' },
-    { id: 'upper-back', label: 'Upper back', d: 'M105 115 L130 118 L128 170 L108 168 Z' },
-    { id: 'abs', label: 'Abs', d: 'M68 178 L105 172 L108 230 L72 235 Z' },
-    { id: 'mid-back', label: 'Mid back', d: 'M105 168 L128 170 L126 220 L108 218 Z' },
-    { id: 'lower-back', label: 'Lower back', d: 'M100 215 L126 218 L130 255 L98 252 Z' },
-    { id: 'hips-glutes', label: 'Hips / glutes', d: 'M70 230 L130 248 L135 295 L65 290 Z' },
-    { id: 'quads', label: 'Quads', d: 'M72 288 L105 290 L100 365 L70 360 Z' },
-    { id: 'hamstrings', label: 'Hamstrings', d: 'M105 290 L132 295 L128 365 L102 360 Z' },
-    { id: 'knees', label: 'Knees', d: 'M72 355 L110 358 L108 392 L74 388 Z' },
-    { id: 'calves', label: 'Calves', d: 'M74 388 L108 392 L106 448 L78 445 Z' },
-    { id: 'ankles', label: 'Ankles', d: 'M78 442 L106 445 L105 460 L80 458 Z' },
-    { id: 'soles-feet', label: 'Soles / feet', d: 'M70 456 L112 458 L118 475 L65 474 Z' },
-    { id: 'elbows-forearms', label: 'Elbows / forearms', d: 'M95 145 L118 150 L125 220 L100 218 Z' },
-    { id: 'wrists-hands', label: 'Wrists / hands', d: 'M100 215 L125 218 L130 255 L102 252 Z' },
+    { id: 'neck', label: 'Neck', d: 'M90 68 L112 70 L110 96 L92 94 Z' },
+    { id: 'traps', label: 'Traps', d: 'M88 92 L122 90 L126 112 L96 114 Z' },
+    { id: 'shoulders', label: 'Shoulders', d: 'M80 95 L122 92 L126 130 L86 134 Z' },
+    { id: 'chest', label: 'Chest', d: 'M72 124 L104 120 L106 172 L70 176 Z' },
+    { id: 'upper-back', label: 'Upper back', d: 'M104 115 L130 118 L128 168 L106 166 Z' },
+    { id: 'abs', label: 'Abs', d: 'M70 174 L104 170 L106 226 L74 230 Z' },
+    { id: 'mid-back', label: 'Mid back', d: 'M104 166 L128 168 L126 216 L106 214 Z' },
+    { id: 'lower-back', label: 'Lower back', d: 'M100 212 L126 216 L128 250 L98 248 Z' },
+    { id: 'hips-glutes', label: 'Hips / glutes', d: 'M72 228 L128 246 L132 292 L68 286 Z' },
+    { id: 'quads', label: 'Quads', d: 'M74 286 L104 290 L100 360 L72 354 Z' },
+    { id: 'hamstrings', label: 'Hamstrings', d: 'M104 290 L128 294 L124 360 L102 354 Z' },
+    { id: 'it-band', label: 'Outer thigh (IT band)', d: 'M118 292 L136 296 L132 362 L116 358 Z' },
+    { id: 'knees', label: 'Knees', d: 'M74 352 L112 356 L110 386 L76 382 Z' },
+    { id: 'calves', label: 'Calves', d: 'M76 384 L110 388 L108 442 L80 438 Z' },
+    { id: 'ankles', label: 'Ankles', d: 'M80 438 L108 442 L106 456 L82 452 Z' },
+    { id: 'soles-feet', label: 'Soles / feet', d: 'M72 452 L114 454 L120 472 L68 470 Z' },
+    { id: 'elbows-forearms', label: 'Elbows / forearms', d: 'M96 144 L118 148 L124 216 L100 214 Z' },
+    { id: 'wrists-hands', label: 'Wrists / hands', d: 'M100 212 L124 214 L128 250 L102 248 Z' },
   ]
 }
 
+/** Soft athletic silhouettes — female = fit recreational runner/yoga proportions. */
 function silhouettePath(view: ViewAngle, gender: Gender): string {
   const male = gender === 'male'
   if (view === 'side') {
     return male
-      ? 'M100 28 C118 28 122 48 112 58 L118 70 L135 100 L140 140 L130 200 L125 240 L138 280 L132 360 L128 420 L135 470 L90 472 L85 420 L80 360 L72 280 L78 240 L70 200 L65 140 L72 100 L88 70 L92 58 C82 48 82 28 100 28 Z'
-      : 'M100 26 C116 26 120 46 110 55 L116 68 L130 98 L132 140 L122 200 L118 235 L140 275 L130 360 L126 420 L132 470 L92 472 L88 420 L84 360 L70 275 L80 235 L72 200 L70 140 L78 98 L92 68 L94 55 C84 46 84 26 100 26 Z'
+      ? 'M100 28 C116 28 120 46 112 56 L118 68 L132 98 L136 138 L128 198 L124 236 L136 278 L130 358 L126 418 L132 468 L92 470 L88 418 L84 358 L76 278 L82 236 L74 198 L68 138 L76 98 L90 68 L94 56 C86 46 84 28 100 28 Z'
+      : 'M100 26 C114 26 118 44 110 54 L116 66 L128 96 L130 136 L122 196 L118 232 L130 272 L126 358 L122 418 L128 468 L94 470 L90 418 L86 358 L78 272 L86 232 L78 196 L74 136 L82 96 L94 66 L96 54 C88 44 86 26 100 26 Z'
   }
-  // front/back same outer silhouette
+  if (view === 'three-quarter') {
+    return male
+      ? 'M102 26 C118 26 124 46 114 56 L128 68 L150 106 L156 150 L146 196 L142 232 L152 272 L148 358 L142 418 L148 468 L112 470 L108 418 L104 358 L102 300 L100 358 L98 418 L96 470 L62 468 L68 418 L64 358 L62 272 L70 232 L64 196 L52 150 L58 106 L78 68 L92 56 C84 46 86 26 102 26 Z'
+      : 'M102 24 C116 24 120 44 112 54 L124 66 L144 102 L148 146 L138 192 L136 228 L146 270 L142 358 L136 418 L142 468 L114 470 L110 418 L106 358 L104 300 L102 358 L100 418 L98 470 L68 468 L72 418 L68 358 L64 270 L72 228 L70 192 L60 146 L66 102 L84 66 L96 54 C88 44 88 24 102 24 Z'
+  }
+  // front/back
   if (male) {
-    return 'M100 26 C118 26 122 48 112 58 L130 70 L155 110 L162 160 L148 200 L140 230 L148 270 L145 360 L140 420 L148 472 L108 474 L105 420 L102 360 L100 300 L98 360 L95 420 L92 474 L52 472 L60 420 L55 360 L52 270 L60 230 L52 200 L38 160 L45 110 L70 70 L88 58 C78 48 82 26 100 26 Z'
+    return 'M100 26 C116 26 120 46 112 56 L128 68 L150 105 L156 152 L146 198 L140 230 L146 270 L144 358 L140 418 L146 470 L110 472 L106 418 L104 358 L102 300 L100 358 L98 418 L94 472 L54 470 L60 418 L56 358 L54 270 L60 230 L54 198 L44 152 L50 105 L72 68 L88 56 C80 46 84 26 100 26 Z'
   }
-  return 'M100 24 C116 24 120 46 110 55 L125 68 L148 105 L152 150 L140 195 L145 235 L158 275 L148 360 L142 420 L148 472 L110 474 L106 420 L103 360 L100 300 L97 360 L94 420 L90 474 L52 472 L58 420 L52 360 L42 275 L55 235 L60 195 L48 150 L52 105 L75 68 L90 55 C80 46 84 24 100 24 Z'
+  // Female athletic: narrower shoulders, clear waist, natural hip (not heavy)
+  return 'M100 24 C114 24 118 44 110 54 L124 66 L142 100 L146 144 L136 188 L132 222 L142 265 L138 358 L134 418 L140 470 L112 472 L108 418 L105 358 L102 300 L100 358 L97 418 L94 472 L60 470 L66 418 L62 358 L58 265 L68 222 L64 188 L54 144 L58 100 L76 66 L90 54 C82 44 86 24 100 24 Z'
+}
+
+function muscleGuides(view: ViewAngle, gender: Gender): string[] {
+  const male = gender === 'male'
+  if (view === 'front') {
+    return male
+      ? [
+          'M100 125 L100 230',
+          'M78 140 Q100 148 122 140',
+          'M80 175 Q100 182 120 175',
+          'M82 250 Q100 258 118 250',
+          'M84 300 Q92 310 88 340',
+          'M116 300 Q108 310 112 340',
+        ]
+      : [
+          'M100 128 L100 226',
+          'M80 142 Q100 150 120 142',
+          'M82 178 Q100 184 118 178',
+          'M84 248 Q100 254 116 248',
+          'M86 302 Q94 312 90 340',
+          'M114 302 Q106 312 110 340',
+        ]
+  }
+  if (view === 'back') {
+    return [
+      'M100 120 L100 248',
+      'M82 140 Q100 150 118 140',
+      'M84 175 Q100 184 116 175',
+      'M80 255 Q100 268 120 255',
+      'M86 310 Q94 320 90 350',
+      'M114 310 Q106 320 110 350',
+    ]
+  }
+  if (view === 'three-quarter') {
+    return [
+      'M104 128 L104 230',
+      'M82 145 Q104 152 120 146',
+      'M86 250 Q104 258 122 252',
+      'M90 305 Q98 315 94 342',
+      'M118 308 Q112 318 116 345',
+    ]
+  }
+  return [
+    'M96 130 L96 230',
+    'M88 250 Q100 260 112 255',
+    'M90 310 Q100 320 108 350',
+  ]
 }
 
 export function BodySilhouette({ gender, view, selected, onToggle }: Props) {
   const spots = hotspotsFor(view, gender)
+  const guides = muscleGuides(view, gender)
+  const uid = `${gender}-${view}`
 
   return (
     <svg
@@ -95,13 +197,58 @@ export function BodySilhouette({ gender, view, selected, onToggle }: Props) {
       role="img"
       aria-label={`${gender} body, ${view} view. Tap regions that hurt.`}
     >
-      <path className="body-outline" d={silhouettePath(view, gender)} />
+      <defs>
+        {/* Soft key light from upper-left (world-locked per painted view) */}
+        <linearGradient id={`skin-${uid}`} x1="18%" y1="8%" x2="88%" y2="92%">
+          <stop offset="0%" stopColor="#d8ebe4" />
+          <stop offset="42%" stopColor="#b7d4cc" />
+          <stop offset="100%" stopColor="#8fb5ac" />
+        </linearGradient>
+        <linearGradient id={`cyl-${uid}`} x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#000" stopOpacity="0.18" />
+          <stop offset="28%" stopColor="#000" stopOpacity="0.02" />
+          <stop offset="55%" stopColor="#fff" stopOpacity="0.14" />
+          <stop offset="78%" stopColor="#000" stopOpacity="0.04" />
+          <stop offset="100%" stopColor="#000" stopOpacity="0.2" />
+        </linearGradient>
+        <radialGradient id={`ao-${uid}`} cx="50%" cy="18%" r="75%">
+          <stop offset="0%" stopColor="#000" stopOpacity="0" />
+          <stop offset="70%" stopColor="#000" stopOpacity="0.04" />
+          <stop offset="100%" stopColor="#000" stopOpacity="0.16" />
+        </radialGradient>
+        <filter id={`soft-${uid}`} x="-8%" y="-8%" width="116%" height="116%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="0.6" result="b" />
+          <feBlend in="SourceGraphic" in2="b" mode="normal" />
+        </filter>
+        <clipPath id={`body-clip-${uid}`}>
+          <path d={silhouettePath(view, gender)} />
+        </clipPath>
+      </defs>
+
+      {/* Soft ground contact / AO */}
+      <ellipse className="body-shadow" cx="100" cy="476" rx="42" ry="6" />
+
+      <g filter={`url(#soft-${uid})`}>
+        <path
+          className="body-outline"
+          d={silhouettePath(view, gender)}
+          fill={`url(#skin-${uid})`}
+        />
+        <g clipPath={`url(#body-clip-${uid})`}>
+          <rect x="0" y="0" width="200" height="490" fill={`url(#cyl-${uid})`} opacity="0.55" />
+          <rect x="0" y="0" width="200" height="490" fill={`url(#ao-${uid})`} />
+          {guides.map((d, i) => (
+            <path key={i} className="muscle-guide" d={d} />
+          ))}
+        </g>
+      </g>
+
       {spots.map((spot) => {
         const isOn = selected.has(spot.id)
         return (
           <path
             key={`${view}-${spot.id}`}
-            className={`hotspot${isOn ? ' selected' : ''}`}
+            className={`hotspot${isOn ? ' selected' : ''}${spot.id.includes('it-band') ? ' itband' : ''}`}
             d={spot.d}
             role="button"
             tabIndex={0}

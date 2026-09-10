@@ -166,9 +166,9 @@ button {
 }
 
 .pill {
-  padding: 8px 12px;
+  padding: 8px 10px;
   border-radius: 999px;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: var(--muted);
   min-height: 36px;
@@ -199,7 +199,7 @@ button {
 .body-rotate {
   width: min(100%, 320px);
   transform-style: preserve-3d;
-  transition: transform 0.35s ease;
+  transition: transform 0.26s ease;
   will-change: transform;
 }
 
@@ -225,8 +225,20 @@ button {
 
 .body-outline {
   fill: var(--teal-soft);
-  stroke: var(--teal);
-  stroke-width: 2;
+  stroke: rgba(45, 90, 90, 0.28);
+  stroke-width: 1.1;
+  stroke-linejoin: round;
+}
+
+.body-shadow {
+  fill: rgba(26, 46, 46, 0.18);
+}
+
+.muscle-guide {
+  fill: none;
+  stroke: rgba(26, 46, 46, 0.14);
+  stroke-width: 1.2;
+  stroke-linecap: round;
 }
 
 .hotspot {
@@ -235,6 +247,11 @@ button {
   stroke-width: 1;
   cursor: pointer;
   transition: fill 0.15s ease;
+}
+
+.hotspot.itband:hover,
+.hotspot.itband:focus-visible {
+  fill: rgba(45, 90, 90, 0.22);
 }
 
 .hotspot:hover,
@@ -414,4 +431,85 @@ button {
   background: var(--accent-soft);
   padding: 10px;
   border-radius: 10px;
+}
+
+
+/* —— Stretch media —— */
+.watch-demo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 12px;
+  padding: 8px;
+  border-radius: 12px;
+  background: var(--teal-soft);
+  text-decoration: none;
+  color: inherit;
+  min-height: 72px;
+}
+
+.watch-demo:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 2px;
+}
+
+.watch-thumb {
+  width: 96px;
+  height: 54px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+  background: #9bb8b2;
+}
+
+.watch-thumb.placeholder {
+  display: inline-block;
+}
+
+.watch-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.watch-label {
+  font-weight: 700;
+  color: var(--teal);
+}
+
+.watch-sub {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.pose-illust {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 12px;
+  padding: 8px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--teal-soft);
+}
+
+.pose-svg {
+  width: 88px;
+  height: 88px;
+  flex-shrink: 0;
+}
+
+.pose-bg {
+  fill: var(--teal-soft);
+}
+
+.pose-figure {
+  fill: var(--teal);
+  opacity: 0.75;
+}
+
+.pose-caption {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
 }

@@ -21,13 +21,20 @@ export function GenderSelect({ onSelect }: Props) {
           aria-label="Male body"
         >
           <svg className="gender-preview" viewBox="0 0 120 220" aria-hidden="true">
-            <ellipse cx="60" cy="28" rx="18" ry="20" className="sil-fill" />
+            <defs>
+              <linearGradient id="gm" x1="20%" y1="0%" x2="90%" y2="100%">
+                <stop offset="0%" stopColor="#cfe4de" />
+                <stop offset="50%" stopColor="#2d5a5a" stopOpacity="0.9" />
+                <stop offset="100%" stopColor="#1a3a3a" stopOpacity="0.85" />
+              </linearGradient>
+            </defs>
+            <ellipse cx="60" cy="28" rx="17" ry="19" fill="url(#gm)" />
             <path
-              className="sil-fill"
-              d="M42 48 Q60 52 78 48 L88 95 Q92 110 88 130 L82 200 Q78 210 70 210 L50 210 Q42 210 38 200 L32 130 Q28 110 32 95 Z"
+              fill="url(#gm)"
+              d="M44 48 Q60 52 76 48 L86 92 Q90 108 86 128 L80 198 Q76 208 68 208 L52 208 Q44 208 40 198 L34 128 Q30 108 34 92 Z"
             />
-            <path className="sil-fill" d="M42 55 L22 120 Q18 130 24 132 L38 90 Z" />
-            <path className="sil-fill" d="M78 55 L98 120 Q102 130 96 132 L82 90 Z" />
+            <path fill="url(#gm)" d="M44 55 L24 118 Q20 128 26 130 L40 88 Z" />
+            <path fill="url(#gm)" d="M76 55 L96 118 Q100 128 94 130 L80 88 Z" />
           </svg>
           <span className="gender-label">Male</span>
         </button>
@@ -39,13 +46,21 @@ export function GenderSelect({ onSelect }: Props) {
           aria-label="Female body"
         >
           <svg className="gender-preview" viewBox="0 0 120 220" aria-hidden="true">
-            <ellipse cx="60" cy="26" rx="16" ry="18" className="sil-fill" />
+            <defs>
+              <linearGradient id="gf" x1="20%" y1="0%" x2="90%" y2="100%">
+                <stop offset="0%" stopColor="#d8ebe4" />
+                <stop offset="50%" stopColor="#2d5a5a" stopOpacity="0.88" />
+                <stop offset="100%" stopColor="#1a3a3a" stopOpacity="0.82" />
+              </linearGradient>
+            </defs>
+            {/* Athletic female: natural waist-to-hip, not heavy */}
+            <ellipse cx="60" cy="26" rx="15" ry="17" fill="url(#gf)" />
             <path
-              className="sil-fill"
-              d="M46 44 Q60 48 74 44 L82 90 Q95 115 90 145 L78 200 Q74 210 66 210 L54 210 Q46 210 42 200 L30 145 Q25 115 38 90 Z"
+              fill="url(#gf)"
+              d="M48 44 Q60 48 72 44 L78 88 Q84 108 82 130 L76 198 Q72 208 64 208 L56 208 Q48 208 44 198 L38 130 Q36 108 42 88 Z"
             />
-            <path className="sil-fill" d="M46 52 L28 105 Q24 115 30 116 L44 78 Z" />
-            <path className="sil-fill" d="M74 52 L92 105 Q96 115 90 116 L76 78 Z" />
+            <path fill="url(#gf)" d="M48 52 L32 108 Q28 116 34 117 L46 78 Z" />
+            <path fill="url(#gf)" d="M72 52 L88 108 Q92 116 86 117 L74 78 Z" />
           </svg>
           <span className="gender-label">Female</span>
         </button>

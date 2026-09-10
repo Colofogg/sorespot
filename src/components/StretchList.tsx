@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { catalog, regionLabel, stretchesForRegions } from '../catalog'
 import type { Stretch } from '../types'
+import { StretchPose } from './StretchPose'
 
 interface Props {
   selectedRegions: string[]
@@ -61,11 +62,48 @@ export function StretchList({ selectedRegions, onBack }: Props) {
   )
 }
 
+function youtubeThumb(url: string): string | null {
+  try {
+    const u = new URL(url)
+    const id = u.searchParams.get('v')
+    if (!id) return null
+    return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`
+  } catch {
+    return null
+  }
+}
+
 function StretchCard({ stretch }: { stretch: Stretch }) {
+  const video = stretch.videoUrl || null
+  const illust = stretch.imageUrl || null
+  const thumb = video ? youtubeThumb(video) : null
+
   return (
     <li className="stretch-card">
       <h2>{stretch.name}</h2>
       <p className="why">{stretch.whyHelps}</p>
+
+      {video ? (
+        <a
+          className="watch-demo"
+          href={video}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {thumb ? (
+            <img className="watch-thumb" src={thumb} alt="" loading="lazy" />
+          ) : (
+            <span className="watch-thumb placeholder" aria-hidden="true" />
+          )}
+          <span className="watch-meta">
+            <span className="watch-label">Watch demo</span>
+            <span className="watch-sub">Opens YouTube</span>
+          </span>
+        </a>
+      ) : illust ? (
+        <StretchPose imageUrl={illust} />
+      ) : null}
+
       <p className="duration">
         <strong>How long:</strong> {stretch.durationOrReps}
       </p>
