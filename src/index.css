@@ -229,10 +229,10 @@ button {
 }
 
 .body-outline {
-  /* Soft edge — no hard Flat Stanley outline */
+  /* Soft edge — continuous human silhouette */
   fill: var(--teal-soft);
-  stroke: rgba(45, 90, 90, 0.14);
-  stroke-width: 0.8;
+  stroke: rgba(45, 90, 90, 0.12);
+  stroke-width: 0.6;
   stroke-linejoin: round;
 }
 
@@ -242,45 +242,39 @@ button {
 
 .muscle-guide {
   fill: none;
-  stroke: rgba(26, 46, 46, 0.2);
-  stroke-width: 1.35;
+  stroke: rgba(26, 46, 46, 0.09);
+  stroke-width: 0.9;
   stroke-linecap: round;
 }
 
-/* Visible at rest on touch — soft outlines/fills (no hover dependency) */
+/* Organic regions: invisible at rest (no stacked washes); soft glow when selected */
 .hotspot {
-  fill: rgba(45, 90, 90, 0.1);
-  stroke: rgba(45, 90, 90, 0.32);
-  stroke-width: 1.25;
-  stroke-linejoin: round;
+  fill: transparent;
+  stroke: none;
   cursor: pointer;
-  transition: fill 0.12s ease, stroke 0.12s ease, stroke-width 0.12s ease;
-  pointer-events: auto;
+  transition: fill 0.15s ease;
+  pointer-events: all;
 }
 
 .hotspot.itband {
-  fill: rgba(45, 90, 90, 0.12);
-  stroke: rgba(45, 90, 90, 0.38);
-  stroke-width: 1.4;
+  fill: transparent;
 }
 
 .hotspot:hover,
 .hotspot:focus-visible {
-  fill: rgba(45, 90, 90, 0.22);
-  stroke: rgba(45, 90, 90, 0.5);
+  fill: rgba(45, 90, 90, 0.16);
+  stroke: none;
   outline: none;
 }
 
 .hotspot.pressed {
-  fill: rgba(45, 90, 90, 0.28);
-  stroke: rgba(45, 90, 90, 0.55);
-  stroke-width: 1.8;
+  fill: rgba(45, 90, 90, 0.22);
+  stroke: none;
 }
 
 .hotspot.selected {
-  fill: var(--spot-fill);
-  stroke: var(--spot);
-  stroke-width: 2.25;
+  fill: rgba(224, 122, 95, 0.48);
+  stroke: none;
 }
 
 .hotspot.selected.pressed {
@@ -290,12 +284,10 @@ button {
 @keyframes hotspot-pulse {
   0%,
   100% {
-    fill: rgba(45, 90, 90, 0.1);
-    stroke: rgba(45, 90, 90, 0.32);
+    fill: transparent;
   }
   50% {
-    fill: rgba(45, 90, 90, 0.28);
-    stroke: rgba(45, 90, 90, 0.55);
+    fill: rgba(45, 90, 90, 0.22);
   }
 }
 
