@@ -228,26 +228,40 @@ button {
   overflow: visible;
 }
 
-.body-outline {
-  /* Soft edge — continuous human silhouette */
-  fill: var(--teal-soft);
-  stroke: rgba(45, 90, 90, 0.12);
-  stroke-width: 0.6;
+/* Low-poly wireframe blueprint */
+.wire-face {
+  fill: rgba(45, 140, 140, 0.045);
+  stroke: #2a8a8a;
+  stroke-width: 0.55;
   stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.wire-face.lit {
+  fill: rgba(224, 122, 95, 0.2);
+  stroke: #d4654a;
+  stroke-width: 1.35;
+}
+
+.wire-outline {
+  stroke: #1f6f6f;
+  stroke-width: 1.05;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  opacity: 0.55;
+  vector-effect: non-scaling-stroke;
+}
+
+.mini-wire .wire-face {
+  stroke-width: 0.7;
+  fill: rgba(45, 140, 140, 0.05);
 }
 
 .body-shadow {
-  fill: rgba(26, 46, 46, 0.2);
+  fill: rgba(26, 46, 46, 0.16);
 }
 
-.muscle-guide {
-  fill: none;
-  stroke: rgba(26, 46, 46, 0.09);
-  stroke-width: 0.9;
-  stroke-linecap: round;
-}
-
-/* Organic regions: invisible at rest (no stacked washes); soft glow when selected */
+/* Organic hit pads: invisible at rest; soft wash when selected (not boxes) */
 .hotspot {
   fill: transparent;
   stroke: none;
@@ -262,23 +276,25 @@ button {
 
 .hotspot:hover,
 .hotspot:focus-visible {
-  fill: rgba(45, 90, 90, 0.16);
+  fill: rgba(42, 138, 138, 0.08);
   stroke: none;
   outline: none;
 }
 
 .hotspot.pressed {
-  fill: rgba(45, 90, 90, 0.22);
+  fill: rgba(42, 138, 138, 0.1);
   stroke: none;
 }
 
+/* Hit pads stay invisible — selection reads on lit wire edges only */
 .hotspot.selected {
-  fill: rgba(224, 122, 95, 0.48);
+  fill: transparent;
   stroke: none;
 }
 
 .hotspot.selected.pressed {
-  fill: rgba(224, 122, 95, 0.62);
+  fill: rgba(224, 122, 95, 0.06);
+  stroke: none;
 }
 
 @keyframes hotspot-pulse {
@@ -287,7 +303,7 @@ button {
     fill: transparent;
   }
   50% {
-    fill: rgba(45, 90, 90, 0.22);
+    fill: rgba(42, 138, 138, 0.2);
   }
 }
 
