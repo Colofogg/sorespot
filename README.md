@@ -1,52 +1,42 @@
 # SoreSpot
 
-Mobile-first PWA: pick a body, spin it, tap sore spots, and get gentle stretch suggestions from a curated catalog.
+A phone app for finding gentle stretches. Pick the body that looks like yours, turn it, tap where it hurts, and read a short stretch card.
 
-**Gentle mobility tips only — not medical advice.**
+**These are gentle ideas for everyday stiffness, not medical advice.** Stop if something hurts sharply.
 
-## Features
+## What you can do
 
-- Male / Female body choice (saved in localStorage; change anytime from the body screen)
-- Full-bleed wireframe body with Front, ¾, Side, and Back views (drag to spin, or tap the angle)
-- Multi-select sore-spot regions mapped to the stretch catalog
-- Stretch cards: name, why it helps, duration/reps, steps, cautions
-- Installable Android-first PWA (vite-plugin-pwa)
+- Choose **Male** or **Female**. The app remembers. Tap **Change body** if you want the other one.
+- Turn the photo: **Front**, **¾**, **Side**, and **Back**. Drag sideways on the picture, or tap those words at the top.
+- Tap the places that hurt. The spot lights up on the photo and its name shows underneath. Tap it again to turn it off. You can pick more than one.
+- Tap **Find stretches** to see cards with the name, why it helps, how long to hold it, the steps, and a caution.
 
-## Run locally
+A quick tap picks a spot. A sideways drag turns the body. You do not have to be exact — the tappable area is a little bigger than the body part.
+
+## On your phone
+
+1. Open the SoreSpot link in Chrome.
+2. Tap the menu (⋮) → **Install app** or **Add to Home screen**.
+3. Open SoreSpot from your home screen. It fills the screen like other apps.
+
+## Run it on a computer
 
 ```bash
 npm install
 npm run dev
 ```
 
-Then open the address Vite prints. It ends in `/sorespot/` (usually http://localhost:5173/sorespot/).
+Open the address Vite prints. It ends in `/sorespot/` (usually http://localhost:5173/sorespot/).
 
-Production build:
+To check the production build:
 
 ```bash
 npm run build
 npm run preview
 ```
 
-## Add to Home Screen (Android Chrome)
+## What's in the project
 
-1. Open the deployed (or locally previewed) site in Chrome on Android.
-2. Tap the menu (⋮) → **Install app** or **Add to Home screen**.
-3. Confirm. SoreSpot opens fullscreen like an app.
-
-## Project layout
-
-- `src/data/stretches.json` — stretch catalog (regions, stretches, `regionToStretchIds`)
-- `src/components/` — Gender, Body map, Stretch list screens
-- PWA manifest + service worker via `vite-plugin-pwa`
-
-## How to use
-
-1. Open SoreSpot.
-2. Tap **Male** or **Female** — whichever body looks more like yours. You can change this later by tapping **Change body**.
-3. A wireframe person appears. Drag sideways on the body to turn it. It snaps to **Front**, **¾**, **Side**, or **Back**. You can also tap those words at the top.
-4. Tap the places that hurt. That part of the wireframe lights up, and its name shows under the body. Tap the same place again to turn it off. You can pick more than one spot.
-5. Tap **Find stretches**.
-6. Each card shows the stretch name, why it helps, how long to hold it, the steps, and a caution. Stop if something hurts sharply. These are gentle ideas, not medical advice.
-
-Dragging sideways turns the figure. A quick tap, without a drag, picks a spot. You do not have to land on a thin line — tap the limb you see.
+- `public/bodies/` — the body photos (Front, ¾, Side, Back, for male and female)
+- `src/data/stretches.json` — the stretch list. Region names in the app match this file.
+- `src/components/` — the three screens: choose a body, tap sore spots, read stretches

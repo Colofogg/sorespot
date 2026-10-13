@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import type { Gender, ViewAngle } from '../types'
 import { regionLabel } from '../catalog'
-import { BodySilhouette } from './BodySilhouette'
+import { BodyPhoto } from './BodyPhoto'
 
 interface Props {
   gender: Gender
@@ -171,8 +171,8 @@ export function BodyMap({
         onPointerUp={endPointer}
         onPointerCancel={endPointer}
       >
-        <div className={`body-rotate${spinning ? ' spinning' : ''}`} data-view={view}>
-          <BodySilhouette
+        <div className="photo-slot">
+          <BodyPhoto
             gender={gender}
             view={view}
             selected={selected}
@@ -181,7 +181,7 @@ export function BodyMap({
             onToggle={onToggle}
           />
         </div>
-        <p className="drag-hint">Drag to spin · Front / ¾ / Side / Back</p>
+        <p className="drag-hint">Drag sideways to turn</p>
       </div>
 
       <div className="body-footer">
@@ -192,7 +192,7 @@ export function BodyMap({
         ) : (
           <div className="empty-copy">
             <p className="empty-title">Where does it hurt?</p>
-            <p className="empty-sub">Spin for the sides — tap where it hurts.</p>
+            <p className="empty-sub">Turn for the sides — tap where it hurts.</p>
           </div>
         )}
 

@@ -117,11 +117,8 @@ button {
 .gender-preview {
   width: 110px;
   height: 220px;
-}
-
-.sil-fill {
-  fill: var(--teal);
-  opacity: 0.85;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 10px rgba(26, 46, 46, 0.16));
 }
 
 .gender-label {
@@ -196,138 +193,114 @@ button {
   cursor: grabbing;
 }
 
-.body-rotate {
-  width: min(100%, 340px);
-  transition: opacity 0.18s ease, transform 0.22s ease;
-  /* Always face-on — view swaps; never edge-on rotateY (that blanks Side) */
-  transform: none;
-}
-
-.body-rotate.spinning {
-  opacity: 0.92;
-  transform: scale(0.985);
-}
-
-.body-stage.dragging .body-rotate {
-  transition: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .body-rotate,
-  .gender-card,
-  .hotspot {
-    transition: none !important;
-  }
-}
-
-.body-svg {
+.photo-slot {
+  flex: 1;
+  min-height: 0;
   width: 100%;
-  height: auto;
-  max-height: min(58dvh, 520px);
-  display: block;
+  position: relative;
+}
+
+/* Fill the stage height; width follows the photo so taps stay aligned. */
+.photo-box {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: 100%;
+  aspect-ratio: 416 / 1200;
+}
+
+.photo-box img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  opacity: 0;
+  transition: opacity 0.16s ease;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: drop-shadow(0 10px 12px rgba(26, 46, 46, 0.18));
+}
+
+.photo-box img.is-on {
+  opacity: 1;
+}
+
+.hit-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   overflow: visible;
+  touch-action: none;
 }
 
-/* Low-poly wireframe blueprint */
-.wire-face {
-  fill: rgba(45, 140, 140, 0.07);
-  stroke: #2a8a8a;
-  stroke-width: 0.7;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
+.hit-pad {
+  fill: transparent;
+  stroke: none;
   pointer-events: fill;
 }
 
-.wire-face.lit {
-  fill: rgba(224, 122, 95, 0.38);
-  stroke: #d4654a;
-  stroke-width: 1.45;
-}
-
-.wire-outline {
-  stroke: #1a6464;
-  stroke-width: 1.35;
-  stroke-linejoin: round;
-  stroke-linecap: round;
-  opacity: 0.9;
-  fill: none;
-  vector-effect: non-scaling-stroke;
-  pointer-events: none;
-}
-
-.wire-landmark {
-  stroke: #164e4e;
-  stroke-width: 1.7;
-  stroke-linejoin: round;
-  stroke-linecap: round;
-  fill: none;
-  vector-effect: non-scaling-stroke;
-  pointer-events: none;
-}
-
-.body-shadow {
-  fill: rgba(26, 46, 46, 0.16);
-  pointer-events: none;
-}
-
-.mini-wire .wire-face {
-  stroke-width: 0.7;
-  fill: rgba(45, 140, 140, 0.05);
-  pointer-events: none;
-}
-
-/* Pads are invisible near-miss targets. Selection reads on the lit faces. */
-.hotspot {
+.region-shape {
   fill: transparent;
-  stroke: none;
+  stroke: transparent;
+  stroke-width: 5;
+  stroke-linejoin: round;
+  pointer-events: fill;
   cursor: pointer;
-  transition: fill 0.15s ease;
-  pointer-events: fill;
+  transition: fill 0.12s ease;
 }
 
-.hotspot.itband {
-  fill: transparent;
+.part.on .region-shape {
+  fill: rgba(224, 122, 95, 0.46);
+  stroke: rgba(176, 72, 52, 0.95);
 }
 
-.hotspot:hover,
-.hotspot:focus-visible {
-  fill: rgba(42, 138, 138, 0.08);
-  stroke: none;
+.part.pressed .region-shape {
+  fill: rgba(45, 90, 90, 0.28);
+  stroke: rgba(45, 90, 90, 0.45);
+}
+
+.part.on.pressed .region-shape {
+  fill: rgba(224, 122, 95, 0.58);
+  stroke: rgba(176, 72, 52, 1);
+}
+
+.part:focus-visible {
   outline: none;
 }
 
-.hotspot.pressed {
-  fill: rgba(42, 138, 138, 0.1);
-  stroke: none;
+.part:focus-visible .region-shape {
+  stroke: var(--teal);
+  stroke-width: 6;
 }
 
-/* Hit pads stay invisible — selection reads on lit wire edges only */
-.hotspot.selected {
-  fill: transparent;
-  stroke: none;
-}
-
-.hotspot.selected.pressed {
-  fill: rgba(224, 122, 95, 0.06);
-  stroke: none;
-}
-
-@keyframes hotspot-pulse {
+@keyframes region-pulse {
   0%,
   100% {
-    fill: rgba(45, 140, 140, 0.07);
+    fill: transparent;
   }
   50% {
-    fill: rgba(42, 138, 138, 0.34);
+    fill: rgba(45, 90, 90, 0.28);
   }
 }
 
-.wire-face.pulse {
-  animation: hotspot-pulse 0.8s ease-in-out 3;
+.part.pulse .region-shape {
+  animation: region-pulse 0.8s ease-in-out 3;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .wire-face.pulse {
+  .photo-box img,
+  .gender-card,
+  .region-shape {
+    transition: none !important;
+  }
+
+  .part.pulse .region-shape {
     animation: none;
   }
 }
@@ -347,6 +320,7 @@ button {
 
 .empty-copy {
   text-align: center;
+  min-height: 48px;
 }
 
 .empty-title {
@@ -363,6 +337,10 @@ button {
 
 .spots-line {
   margin: 0;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   font-size: 0.9rem;
   color: var(--teal);
