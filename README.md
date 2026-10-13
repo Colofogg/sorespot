@@ -7,7 +7,7 @@ Mobile-first PWA: pick a body, spin it, tap sore spots, and get gentle stretch s
 ## Features
 
 - Male / Female body choice (saved in localStorage; change anytime from the body screen)
-- Full-bleed SVG silhouette with Front / Side / Back views (drag to spin, snaps to angle)
+- Full-bleed wireframe body with Front, ¾, Side, and Back views (drag to spin, or tap the angle)
 - Multi-select sore-spot regions mapped to the stretch catalog
 - Stretch cards: name, why it helps, duration/reps, steps, cautions
 - Installable Android-first PWA (vite-plugin-pwa)
@@ -19,7 +19,7 @@ npm install
 npm run dev
 ```
 
-Then open the URL Vite prints (usually http://localhost:5173).
+Then open the address Vite prints. It ends in `/sorespot/` (usually http://localhost:5173/sorespot/).
 
 Production build:
 
@@ -40,9 +40,13 @@ npm run preview
 - `src/components/` — Gender, Body map, Stretch list screens
 - PWA manifest + service worker via `vite-plugin-pwa`
 
-## Demo path
+## How to use
 
-1. Choose **Male** or **Female**
-2. Drag the body to **Side** or stay on **Front**
-3. Tap **Soles / feet** (and optionally calves)
-4. Tap **Find stretches** → calf/foot-related stretches from the catalog
+1. Open SoreSpot.
+2. Tap **Male** or **Female** — whichever body looks more like yours. You can change this later by tapping **Change body**.
+3. A wireframe person appears. Drag sideways on the body to turn it. It snaps to **Front**, **¾**, **Side**, or **Back**. You can also tap those words at the top.
+4. Tap the places that hurt. That part of the wireframe lights up, and its name shows under the body. Tap the same place again to turn it off. You can pick more than one spot.
+5. Tap **Find stretches**.
+6. Each card shows the stretch name, why it helps, how long to hold it, the steps, and a caution. Stop if something hurts sharply. These are gentle ideas, not medical advice.
+
+Dragging sideways turns the figure. A quick tap, without a drag, picks a spot. You do not have to land on a thin line — tap the limb you see.

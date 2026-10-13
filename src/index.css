@@ -230,44 +230,59 @@ button {
 
 /* Low-poly wireframe blueprint */
 .wire-face {
-  fill: rgba(45, 140, 140, 0.045);
+  fill: rgba(45, 140, 140, 0.07);
   stroke: #2a8a8a;
-  stroke-width: 0.55;
+  stroke-width: 0.7;
   stroke-linejoin: round;
   vector-effect: non-scaling-stroke;
+  pointer-events: fill;
 }
 
 .wire-face.lit {
-  fill: rgba(224, 122, 95, 0.2);
+  fill: rgba(224, 122, 95, 0.38);
   stroke: #d4654a;
-  stroke-width: 1.35;
+  stroke-width: 1.45;
 }
 
 .wire-outline {
-  stroke: #1f6f6f;
-  stroke-width: 1.05;
+  stroke: #1a6464;
+  stroke-width: 1.35;
   stroke-linejoin: round;
   stroke-linecap: round;
-  opacity: 0.55;
+  opacity: 0.9;
+  fill: none;
   vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+
+.wire-landmark {
+  stroke: #164e4e;
+  stroke-width: 1.7;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  fill: none;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+
+.body-shadow {
+  fill: rgba(26, 46, 46, 0.16);
+  pointer-events: none;
 }
 
 .mini-wire .wire-face {
   stroke-width: 0.7;
   fill: rgba(45, 140, 140, 0.05);
+  pointer-events: none;
 }
 
-.body-shadow {
-  fill: rgba(26, 46, 46, 0.16);
-}
-
-/* Organic hit pads: invisible at rest; soft wash when selected (not boxes) */
+/* Pads are invisible near-miss targets. Selection reads on the lit faces. */
 .hotspot {
   fill: transparent;
   stroke: none;
   cursor: pointer;
   transition: fill 0.15s ease;
-  pointer-events: all;
+  pointer-events: fill;
 }
 
 .hotspot.itband {
@@ -300,19 +315,19 @@ button {
 @keyframes hotspot-pulse {
   0%,
   100% {
-    fill: transparent;
+    fill: rgba(45, 140, 140, 0.07);
   }
   50% {
-    fill: rgba(42, 138, 138, 0.2);
+    fill: rgba(42, 138, 138, 0.34);
   }
 }
 
-.hotspot.pulse {
+.wire-face.pulse {
   animation: hotspot-pulse 0.8s ease-in-out 3;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hotspot.pulse {
+  .wire-face.pulse {
     animation: none;
   }
 }
