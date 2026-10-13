@@ -1,5 +1,5 @@
 import type { Gender } from '../types'
-import { MiniFigure } from './BodySilhouette'
+import { MiniFigure } from './BodyPhoto'
 
 interface Props {
   onSelect: (gender: Gender) => void
