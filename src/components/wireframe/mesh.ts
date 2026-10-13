@@ -1,7 +1,11 @@
 /**
- * Original low-poly human wireframe mesh for SoreSpot.
- * Procedural elliptical cross-section stacks → projected faces.
- * Style inspired by public-domain prismatic wireframes; geometry is original.
+ * Low-poly human wireframe for SoreSpot.
+ *
+ * One 3D body is projected into Front, ¾, Side, and Back. Hit targets are the
+ * projected faces (see hotspots.ts), so a tap lands on the limb that is drawn.
+ * Left stays on the left of the screen in every view, including Back.
+ *
+ * Geometry is original. Hex/octagon stations, quads only (no diagonals).
  */
 import type { Gender, ViewAngle } from '../../types'
 
@@ -9,36 +13,175 @@ export type Pt = [number, number]
 
 export interface Face {
   pts: Pt[]
-  zone?: string
+  zone: string
+  /** Larger = closer to the camera. Faces are sorted far → near. */
+  depth: number
+  /** Body-space centroid, before projection. */
+  body: { x: number; y: number; z: number }
+  part: string
 }
 
 export interface WireMesh {
   faces: Face[]
   outlines: Pt[][]
+  /** Closed joint rings (shoulders, hips, knees, ankles, wrists). */
+  landmarks: Pt[][]
 }
 
 type V3 = { x: number; y: number; z: number }
 
 const TAU = Math.PI * 2
+/** Three-quarter turn, radians. Shared by projection and which faces face the camera. */
+const THREE_QUARTER_YAW = 0.95
 
-function project(v: V3, view: ViewAngle): Pt {
-  const { x, y, z } = v
-  if (view === 'front') return [100 + x, y]
-  if (view === 'back') return [100 - x, y]
-  if (view === 'side') {
-    // Keep a whisper of lateral so limbs don't fully collapse
-    return [100 + z * 1.2 + x * 0.12, y]
-  }
-  const yaw = Math.PI / 4.2
-  const xr = x * Math.cos(yaw) - z * Math.sin(yaw)
-  const zr = x * Math.sin(yaw) + z * Math.cos(yaw)
-  return [100 + xr * 0.95 + zr * 0.1, y - zr * 0.035]
+interface Metrics {
+  male: boolean
+  head: number
+  neck: number
+  shoulder: number
+  chest: number
+  chestZ: number
+  waist: number
+  hip: number
+  hipZ: number
+  glute: number
+  stance: number
+  thigh: number
+  arm: number
+  /** Where the arm hangs, outside the hip. */
+  armHang: number
 }
 
-function ring(y: number, rx: number, rz: number, segs: number, cx = 0, cz = 0): V3[] {
+function metrics(male: boolean): Metrics {
+  if (male) {
+    return {
+      male: true,
+      head: 1,
+      neck: 7.4,
+      shoulder: 47,
+      chest: 39,
+      chestZ: 4,
+      waist: 32,
+      hip: 38,
+      hipZ: -2,
+      glute: 35,
+      stance: 16,
+      thigh: 13,
+      arm: 1,
+      armHang: 66,
+    }
+  }
+  return {
+    male: false,
+    head: 0.94,
+    neck: 6.5,
+    shoulder: 35,
+    chest: 31,
+    chestZ: 6.5,
+    waist: 24,
+    hip: 44,
+    hipZ: -3.5,
+    glute: 40,
+    stance: 18,
+    thigh: 14,
+      arm: 0.86,
+      armHang: 62,
+  }
+}
+
+function camera(v: V3, view: ViewAngle): { sx: number; sy: number; depth: number } {
+  if (view === 'front') {
+    return { sx: 100 + v.x + v.z * 0.04, sy: v.y + v.z * 0.07, depth: v.z }
+  }
+  if (view === 'back') {
+    // Keep screen-left = body-left. Posterior surface faces the camera.
+    return { sx: 100 + v.x - v.z * 0.04, sy: v.y - v.z * 0.07, depth: -v.z }
+  }
+  if (view === 'side') {
+    // Profile facing screen-left. Person's right side (+x) is near the camera.
+    // Depth (z) is the wide axis so the chest, back, and a forward arm stay apart.
+    return {
+      sx: 100 - v.z * 1.5 + v.x * 0.14,
+      sy: v.y + v.x * 0.01,
+      depth: v.x * 0.92 + v.z * 0.12,
+    }
+  }
+  const yaw = THREE_QUARTER_YAW
+  const c = Math.cos(yaw)
+  const s = Math.sin(yaw)
+  const x = v.x * c - v.z * s
+  const z = v.x * s + v.z * c
+  return { sx: 100 + x, sy: v.y + z * 0.055, depth: z }
+}
+
+/** Direction a face normal must agree with to face the camera. */
+function camDir(view: ViewAngle): V3 {
+  if (view === 'front') return { x: 0, y: 0, z: 1 }
+  if (view === 'back') return { x: 0, y: 0, z: -1 }
+  if (view === 'side') return { x: 1, y: 0, z: 0.15 }
+  const yaw = THREE_QUARTER_YAW
+  return { x: Math.sin(yaw), y: 0, z: Math.cos(yaw) }
+}
+
+function sub(a: V3, b: V3): V3 {
+  return { x: a.x - b.x, y: a.y - b.y, z: a.z - b.z }
+}
+
+function cross(a: V3, b: V3): V3 {
+  return {
+    x: a.y * b.z - a.z * b.y,
+    y: a.z * b.x - a.x * b.z,
+    z: a.x * b.y - a.y * b.x,
+  }
+}
+
+function dot(a: V3, b: V3): number {
+  return a.x * b.x + a.y * b.y + a.z * b.z
+}
+
+function centroid3(pts: V3[]): V3 {
+  const n = pts.length
+  let x = 0
+  let y = 0
+  let z = 0
+  for (const p of pts) {
+    x += p.x
+    y += p.y
+    z += p.z
+  }
+  return { x: x / n, y: y / n, z: z / n }
+}
+
+function polyArea(pts: Pt[]): number {
+  let a = 0
+  for (let i = 0; i < pts.length; i++) {
+    const j = (i + 1) % pts.length
+    a += pts[i][0] * pts[j][1] - pts[j][0] * pts[i][1]
+  }
+  return Math.abs(a) / 2
+}
+
+/**
+ * Outward normal of a stitched quad. Vertex order a[i] → a[j] → b[j] produces
+ * an inward cross product (y grows downward), so the normal is negated.
+ */
+function outwardNormal(verts: V3[]): V3 {
+  const e1 = sub(verts[1], verts[0])
+  const e2 = sub(verts[2], verts[0])
+  const n = cross(e1, e2)
+  return { x: -n.x, y: -n.y, z: -n.z }
+}
+
+function facesCamera(verts: V3[], view: ViewAngle): boolean {
+  const n = outwardNormal(verts)
+  // Keep grazing silhouette faces; drop the far side of the cage.
+  return dot(n, camDir(view)) > -0.18
+}
+
+function ring(y: number, rx: number, rz: number, n: number, cx = 0, cz = 0): V3[] {
   const pts: V3[] = []
-  for (let i = 0; i < segs; i++) {
-    const a = (i / segs) * TAU - Math.PI / 2
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * TAU - Math.PI / 2
     pts.push({
       x: cx + Math.cos(a) * rx,
       y,
@@ -48,216 +191,60 @@ function ring(y: number, rx: number, rz: number, segs: number, cx = 0, cz = 0): 
   return pts
 }
 
-function stitch(a: V3[], b: V3[], view: ViewAngle, zone?: string): Face[] {
+interface Built {
+  faces: Face[]
+  outlines: Pt[][]
+  landmarks: Pt[][]
+}
+
+function projectRing(r: V3[], view: ViewAngle): Pt[] {
+  const pts = r.map((v) => {
+    const c = camera(v, view)
+    return [c.sx, c.sy] as Pt
+  })
+  pts.push(pts[0])
+  return pts
+}
+
+function addFace(
+  built: Built,
+  verts: V3[],
+  zone: string,
+  view: ViewAngle,
+  part: string,
+) {
+  if (verts.length < 3) return
+  if (!facesCamera(verts, view)) return
+  const pts = verts.map((v) => {
+    const c = camera(v, view)
+    return [c.sx, c.sy] as Pt
+  })
+  if (polyArea(pts) < 0.4) return
+  const body = centroid3(verts)
+  let depth = 0
+  for (const v of verts) depth += camera(v, view).depth
+  depth /= verts.length
+  built.faces.push({ pts, zone, depth, body, part })
+}
+
+function stitch(
+  built: Built,
+  a: V3[],
+  b: V3[],
+  view: ViewAngle,
+  part: string,
+  zoneAt: (i: number, mid: V3) => string,
+) {
   const n = Math.min(a.length, b.length)
-  const faces: Face[] = []
   for (let i = 0; i < n; i++) {
     const j = (i + 1) % n
-    const p0 = project(a[i], view)
-    const p1 = project(a[j], view)
-    const p2 = project(b[j], view)
-    const p3 = project(b[i], view)
-    faces.push({ pts: [p0, p1, p2], zone })
-    faces.push({ pts: [p0, p2, p3], zone })
+    const verts = [a[i], a[j], b[j], b[i]]
+    const mid = centroid3(verts)
+    addFace(built, verts, zoneAt(i, mid), view, part)
   }
-  return faces
 }
 
-function areaOk(pts: Pt[]): boolean {
-  if (pts.length < 3) return false
-  const [a, b, c] = pts
-  const area = Math.abs((a[0] * (b[1] - c[1]) + b[0] * (c[1] - a[1]) + c[0] * (a[1] - b[1])) / 2)
-  return area > 0.4
-}
-
-type Seg = { y: number; rx: number; rz: number; zone: string; cx?: number; cz?: number }
-
-function stack(segs: Seg[], view: ViewAngle, ringSegs = 8): { faces: Face[]; rings: V3[][] } {
-  const rings = segs.map((s) => ring(s.y, s.rx, s.rz, ringSegs, s.cx ?? 0, s.cz ?? 0))
-  const faces: Face[] = []
-  for (let i = 0; i < rings.length - 1; i++) {
-    const zone = segs[i + 1]?.zone ?? segs[i].zone
-    faces.push(...stitch(rings[i], rings[i + 1], view, zone))
-  }
-  return { faces, rings }
-}
-
-function limbChain(
-  points: { y: number; rx: number; rz: number; cx: number; cz: number; zone: string }[],
-  view: ViewAngle,
-  segs = 6,
-): Face[] {
-  const rings = points.map((p) => ring(p.y, p.rx, p.rz, segs, p.cx, p.cz))
-  const faces: Face[] = []
-  for (let i = 0; i < rings.length - 1; i++) {
-    faces.push(...stitch(rings[i], rings[i + 1], view, points[i + 1].zone))
-  }
-  return faces
-}
-
-function headCage(view: ViewAngle, male: boolean): Face[] {
-  const s = male ? 1 : 0.96
-  const cy = male ? 40 : 38
-  const levels = [
-    { y: cy - 18 * s, rx: 7 * s, rz: 8 * s },
-    { y: cy - 10 * s, rx: 14 * s, rz: 15 * s },
-    { y: cy - 2 * s, rx: 16 * s, rz: 17 * s },
-    { y: cy + 8 * s, rx: 15 * s, rz: 16 * s },
-    { y: cy + 18 * s, rx: 11 * s, rz: 12 * s },
-    { y: cy + 26 * s, rx: 8 * s, rz: 9 * s },
-  ]
-  const rings = levels.map((l) => ring(l.y, l.rx, l.rz, 8))
-  const faces: Face[] = []
-  for (let i = 0; i < rings.length - 1; i++) {
-    faces.push(...stitch(rings[i], rings[i + 1], view, 'neck'))
-  }
-  // Nose prism (forward)
-  const noseZ = 17 * s
-  const nose = [
-    { x: 0, y: cy - 2, z: noseZ },
-    { x: -3.5 * s, y: cy + 3, z: noseZ * 0.72 },
-    { x: 3.5 * s, y: cy + 3, z: noseZ * 0.72 },
-    { x: 0, y: cy + 10, z: noseZ * 0.5 },
-  ].map((v) => project(v, view))
-  faces.push({ pts: [nose[0], nose[1], nose[2]], zone: 'neck' })
-  faces.push({ pts: [nose[1], nose[3], nose[2]], zone: 'neck' })
-  return faces
-}
-
-function torsoSegs(male: boolean): Seg[] {
-  if (male) {
-    return [
-      { y: 66, rx: 10, rz: 11, zone: 'neck' },
-      { y: 80, rx: 14, rz: 13, zone: 'traps' },
-      { y: 96, rx: 44, rz: 16, zone: 'shoulders' },
-      { y: 112, rx: 46, rz: 18, zone: 'shoulders' },
-      { y: 132, rx: 40, rz: 22, zone: 'chest' },
-      { y: 154, rx: 38, rz: 22, zone: 'chest' },
-      { y: 176, rx: 33, rz: 18, zone: 'abs' },
-      { y: 198, rx: 30, rz: 16, zone: 'abs' },
-      { y: 220, rx: 32, rz: 17, zone: 'abs' },
-      { y: 242, rx: 37, rz: 20, zone: 'hips-glutes' },
-      { y: 262, rx: 35, rz: 19, zone: 'hips-glutes' },
-    ]
-  }
-  return [
-    { y: 64, rx: 9.5, rz: 10.5, zone: 'neck' },
-    { y: 78, rx: 13, rz: 12, zone: 'traps' },
-    { y: 94, rx: 37, rz: 15, zone: 'shoulders' },
-    { y: 110, rx: 38, rz: 16, zone: 'shoulders' },
-    { y: 130, rx: 34, rz: 19, zone: 'chest' },
-    { y: 152, rx: 32, rz: 19, zone: 'chest' },
-    { y: 172, rx: 27, rz: 15, zone: 'abs' },
-    { y: 192, rx: 26, rz: 14, zone: 'abs' },
-    { y: 214, rx: 32, rz: 17, zone: 'hips-glutes' },
-    { y: 236, rx: 41, rz: 21, zone: 'hips-glutes' },
-    { y: 258, rx: 39, rz: 20, zone: 'hips-glutes' },
-  ]
-}
-
-function leg(side: 1 | -1, male: boolean, view: ViewAngle): Face[] {
-  const hx = male ? 15 : 17
-  const startY = male ? 262 : 258
-  const pts = [
-    { y: startY, rx: 14, rz: 15, cx: side * hx, cz: 2, zone: 'hips-glutes' },
-    {
-      y: startY + 30,
-      rx: side === 1 ? 14 : 12.5,
-      rz: 14,
-      cx: side * (hx + 1),
-      cz: 1,
-      zone: side === 1 ? 'it-band-r' : 'it-band-l',
-    },
-    {
-      y: startY + 60,
-      rx: side === 1 ? 13 : 11.5,
-      rz: 13,
-      cx: side * (hx + 1.5),
-      cz: 0,
-      zone: side === 1 ? 'it-band-r' : 'it-band-l',
-    },
-    {
-      y: startY + 90,
-      rx: 11,
-      rz: 12,
-      cx: side * hx,
-      cz: 0,
-      zone: side === 1 ? 'quads-r' : 'quads-l',
-    },
-    {
-      y: startY + 112,
-      rx: 10,
-      rz: 11,
-      cx: side * (hx - 0.5),
-      cz: 1,
-      zone: side === 1 ? 'knees-r' : 'knees-l',
-    },
-    {
-      y: startY + 140,
-      rx: 9,
-      rz: 10,
-      cx: side * (hx - 1),
-      cz: 0,
-      zone: side === 1 ? 'calves-r' : 'calves-l',
-    },
-    {
-      y: startY + 168,
-      rx: 8,
-      rz: 9,
-      cx: side * (hx - 1),
-      cz: -1,
-      zone: side === 1 ? 'calves-r' : 'calves-l',
-    },
-    {
-      y: startY + 190,
-      rx: 7,
-      rz: 8,
-      cx: side * (hx - 1),
-      cz: 0,
-      zone: side === 1 ? 'ankles-r' : 'ankles-l',
-    },
-    {
-      y: startY + 204,
-      rx: 9,
-      rz: 15,
-      cx: side * hx,
-      cz: 9,
-      zone: 'soles-feet',
-    },
-    {
-      y: startY + 214,
-      rx: 11,
-      rz: 17,
-      cx: side * hx,
-      cz: 13,
-      zone: 'soles-feet',
-    },
-  ]
-  if (view === 'back') {
-    for (const p of pts) {
-      if (p.zone.startsWith('quads')) {
-        p.zone = side === 1 ? 'hamstrings-r' : 'hamstrings-l'
-      }
-    }
-  }
-  return limbChain(pts, view, 6)
-}
-
-function arm(side: 1 | -1, male: boolean, view: ViewAngle): Face[] {
-  const shoulderY = male ? 112 : 110
-  const shoulderX = male ? 46 : 38
-  const pts = [
-    { y: shoulderY, rx: 11, rz: 10, cx: side * shoulderX, cz: 2, zone: 'shoulders' },
-    { y: shoulderY + 30, rx: 9.5, rz: 9, cx: side * (shoulderX + 5), cz: 1, zone: 'shoulders' },
-    { y: shoulderY + 62, rx: 8.5, rz: 8, cx: side * (shoulderX + 7), cz: 0, zone: 'elbows-forearms' },
-    { y: shoulderY + 96, rx: 7.5, rz: 7, cx: side * (shoulderX + 8), cz: 0, zone: 'elbows-forearms' },
-    { y: shoulderY + 126, rx: 6.5, rz: 6, cx: side * (shoulderX + 9), cz: 1, zone: 'wrists-hands' },
-    { y: shoulderY + 146, rx: 8, rz: 5, cx: side * (shoulderX + 10), cz: 2, zone: 'wrists-hands' },
-  ]
-  return limbChain(pts, view, 6)
-}
-
-function outlineFromRings(rings: V3[][], view: ViewAngle): Pt[][] {
+function outlineOf(rings: V3[][], view: ViewAngle): Pt[][] {
   if (!rings.length) return []
   const left: Pt[] = []
   const right: Pt[] = []
@@ -267,14 +254,14 @@ function outlineFromRings(rings: V3[][], view: ViewAngle): Pt[][] {
     let minP: Pt = [0, 0]
     let maxP: Pt = [0, 0]
     for (const v of r) {
-      const p = project(v, view)
-      if (p[0] < minX) {
-        minX = p[0]
-        minP = p
+      const c = camera(v, view)
+      if (c.sx < minX) {
+        minX = c.sx
+        minP = [c.sx, c.sy]
       }
-      if (p[0] > maxX) {
-        maxX = p[0]
-        maxP = p
+      if (c.sx > maxX) {
+        maxX = c.sx
+        maxP = [c.sx, c.sy]
       }
     }
     left.push(minP)
@@ -283,258 +270,252 @@ function outlineFromRings(rings: V3[][], view: ViewAngle): Pt[][] {
   return [left, right]
 }
 
-/** Dedicated left-facing profile lattice — readable Side view, never blank. */
-function buildSideProfile(male: boolean): WireMesh {
-  // Front contour (chest / face left) and back contour (spine / glutes)
-  const front: Pt[] = male
-    ? [
-        [108, 22],
-        [118, 30],
-        [124, 40],
-        [122, 52],
-        [116, 62],
-        [112, 72],
-        [120, 92],
-        [130, 118],
-        [134, 148],
-        [128, 178],
-        [122, 208],
-        [124, 236],
-        [130, 258],
-        [126, 286],
-        [120, 320],
-        [118, 356],
-        [116, 392],
-        [118, 428],
-        [124, 456],
-        [138, 472],
-      ]
-    : [
-        [108, 20],
-        [117, 28],
-        [122, 38],
-        [120, 50],
-        [114, 60],
-        [110, 70],
-        [118, 90],
-        [126, 116],
-        [128, 146],
-        [122, 174],
-        [118, 200],
-        [124, 228],
-        [134, 252],
-        [128, 280],
-        [122, 314],
-        [118, 350],
-        [116, 386],
-        [118, 422],
-        [124, 450],
-        [136, 468],
-      ]
-  const back: Pt[] = male
-    ? [
-        [92, 24],
-        [86, 36],
-        [84, 50],
-        [86, 64],
-        [88, 78],
-        [82, 100],
-        [76, 130],
-        [74, 162],
-        [76, 194],
-        [80, 224],
-        [86, 248],
-        [94, 268],
-        [90, 298],
-        [84, 332],
-        [82, 368],
-        [84, 404],
-        [86, 438],
-        [90, 462],
-        [98, 476],
-      ]
-    : [
-        [92, 22],
-        [86, 34],
-        [84, 48],
-        [86, 62],
-        [88, 76],
-        [80, 98],
-        [74, 128],
-        [72, 158],
-        [74, 188],
-        [78, 216],
-        [88, 242],
-        [98, 264],
-        [92, 294],
-        [84, 328],
-        [82, 364],
-        [84, 400],
-        [86, 434],
-        [90, 458],
-        [98, 472],
-      ]
-
-  const faces: Face[] = []
-  const n = Math.min(front.length, back.length)
-  // Horizontal ribs + diagonal triangulation between front/back contours
-  for (let i = 0; i < n - 1; i++) {
-    const zone =
-      i < 3
-        ? 'neck'
-        : i < 6
-          ? 'shoulders'
-          : i < 10
-            ? 'chest'
-            : i < 13
-              ? 'abs'
-              : i < 15
-                ? 'hips-glutes'
-                : i < 17
-                  ? 'it-band-r'
-                  : i < 19
-                    ? 'calves-r'
-                    : 'soles-feet'
-    const a = front[i]
-    const b = front[i + 1]
-    const c = back[Math.min(i + 1, back.length - 1)]
-    const d = back[Math.min(i, back.length - 1)]
-    // Mid spine points for extra low-poly faces
-    const midA: Pt = [(a[0] + d[0]) / 2, (a[1] + d[1]) / 2]
-    const midB: Pt = [(b[0] + c[0]) / 2, (b[1] + c[1]) / 2]
-    faces.push({ pts: [a, b, midB], zone })
-    faces.push({ pts: [a, midB, midA], zone })
-    faces.push({ pts: [midA, midB, c], zone })
-    faces.push({ pts: [midA, c, d], zone })
-  }
-
-  // Visible near arm (profile)
-  const armFront: Pt[] = male
-    ? [
-        [118, 100],
-        [128, 128],
-        [132, 160],
-        [134, 192],
-        [136, 220],
-        [138, 242],
-      ]
-    : [
-        [116, 98],
-        [124, 126],
-        [128, 156],
-        [130, 188],
-        [132, 214],
-        [134, 236],
-      ]
-  const armBack: Pt[] = male
-    ? [
-        [108, 104],
-        [114, 132],
-        [116, 164],
-        [118, 196],
-        [120, 222],
-        [122, 244],
-      ]
-    : [
-        [106, 102],
-        [112, 130],
-        [114, 160],
-        [116, 190],
-        [118, 216],
-        [120, 238],
-      ]
-  for (let i = 0; i < armFront.length - 1; i++) {
-    const zone = i < 2 ? 'shoulders' : i < 4 ? 'elbows-forearms' : 'wrists-hands'
-    faces.push({
-      pts: [armFront[i], armFront[i + 1], armBack[i + 1]],
-      zone,
-    })
-    faces.push({
-      pts: [armFront[i], armBack[i + 1], armBack[i]],
-      zone,
-    })
-  }
-
-  // Near thigh IT-band column emphasis
-  const itF: Pt[] = [
-    [128, 268],
-    [126, 300],
-    [124, 332],
-    [122, 362],
-  ]
-  const itB: Pt[] = [
-    [112, 270],
-    [110, 302],
-    [108, 334],
-    [106, 364],
-  ]
-  for (let i = 0; i < itF.length - 1; i++) {
-    faces.push({ pts: [itF[i], itF[i + 1], itB[i + 1]], zone: 'it-band-r' })
-    faces.push({ pts: [itF[i], itB[i + 1], itB[i]], zone: 'it-band-r' })
-  }
-
-  return {
-    faces: faces.filter((f) => areaOk(f.pts)),
-    outlines: [front, back, armFront, armBack],
-  }
+interface Axial {
+  y: number
+  rx: number
+  rz: number
+  cz?: number
+  /** Zone on the anterior surface of the segment that ENDS here. */
+  front: string
+  back: string
+  mark?: boolean
 }
 
-function buildProjected(gender: Gender, view: ViewAngle): WireMesh {
-  const male = gender === 'male'
-  const faces: Face[] = []
-  faces.push(...headCage(view, male))
-  const torso = stack(torsoSegs(male), view, view === 'three-quarter' ? 8 : 8)
-  faces.push(...torso.faces)
-  faces.push(...arm(1, male, view))
-  faces.push(...arm(-1, male, view))
-  faces.push(...leg(1, male, view))
-  faces.push(...leg(-1, male, view))
-  return {
-    faces: faces.filter((f) => areaOk(f.pts)),
-    outlines: outlineFromRings(torso.rings, view),
+function axialStations(m: Metrics): Axial[] {
+  const s = m.head
+  return [
+    { y: 12, rx: 6.5 * s, rz: 7.5 * s, front: 'neck', back: 'neck' },
+    { y: 26, rx: 14.2 * s, rz: 15.4 * s, front: 'neck', back: 'neck' },
+    { y: 42, rx: 16 * s, rz: 17.2 * s, front: 'neck', back: 'neck' },
+    { y: 56, rx: 14 * s, rz: 15.2 * s, front: 'neck', back: 'neck' },
+    { y: 68, rx: 9.2 * s, rz: 11 * s, front: 'neck', back: 'neck' },
+    { y: 80, rx: m.neck * 0.82, rz: m.neck * 0.9, front: 'neck', back: 'neck' },
+    { y: 94, rx: m.neck + 1.2, rz: m.neck + 1.6, front: 'neck', back: 'neck' },
+    // Trapezius slope into the shoulder line.
+    { y: 108, rx: m.shoulder * 0.46, rz: 12, cz: -1, front: 'shoulders', back: 'traps' },
+    { y: 122, rx: m.shoulder, rz: 15, front: 'shoulders', back: 'shoulders', mark: true },
+    { y: 146, rx: m.chest, rz: m.male ? 20 : 18, cz: m.chestZ, front: 'chest', back: 'upper-back' },
+    { y: 168, rx: m.chest * 0.92, rz: m.male ? 17 : 16, cz: m.chestZ * 0.55, front: 'chest', back: 'upper-back' },
+    { y: 190, rx: (m.chest + m.waist) / 2, rz: m.male ? 15 : 13.5, cz: 1, front: 'abs', back: 'mid-back' },
+    { y: 210, rx: m.waist, rz: m.male ? 14 : 12.5, front: 'abs', back: 'mid-back' },
+    { y: 228, rx: (m.waist + m.hip) * 0.46, rz: 16, cz: m.hipZ * 0.4, front: 'abs', back: 'lower-back' },
+    { y: 244, rx: m.hip * 0.96, rz: m.male ? 20 : 22, cz: m.hipZ, front: 'hips', back: 'hips', mark: true },
+    { y: 260, rx: m.glute, rz: m.male ? 19 : 21, cz: m.hipZ - 2, front: 'hips', back: 'hips' },
+  ]
+}
+
+function anteriorFacesView(sinA: number, view: ViewAngle): boolean {
+  if (view === 'front') return sinA > -0.5
+  if (view === 'back') return sinA > 0.5
+  if (view === 'side') return sinA > 0
+  return sinA > -0.02
+}
+
+function buildAxial(built: Built, m: Metrics, view: ViewAngle) {
+  const segs = 8
+  const stations = axialStations(m)
+  const rings = stations.map((s) => ring(s.y, s.rx, s.rz, segs, 0, s.cz ?? 0))
+  for (let i = 0; i < rings.length - 1; i++) {
+    const dest = stations[i + 1]
+    stitch(built, rings[i], rings[i + 1], view, 'axial', (_k, mid) => {
+      if (dest.front === 'hips') {
+        return mid.x >= 0 ? 'hips-glutes-r' : 'hips-glutes-l'
+      }
+      const ang = Math.atan2(mid.z - (dest.cz ?? 0), mid.x)
+      const sinA = Math.sin(ang)
+      return anteriorFacesView(sinA, view) ? dest.front : dest.back
+    })
+  }
+  built.outlines.push(...outlineOf(rings, view))
+  stations.forEach((s, i) => {
+    if (s.mark) built.landmarks.push(projectRing(rings[i], view))
+  })
+
+  // Nose so the head has a facing direction. Same region as the head (neck).
+  const cy = 40 * m.head
+  const nz = 17.4 * m.head
+  const nose: V3[] = [
+    { x: 0, y: cy - 5, z: nz },
+    { x: -3.2 * m.head, y: cy + 2, z: nz * 0.62 },
+    { x: 3.2 * m.head, y: cy + 2, z: nz * 0.62 },
+    { x: 0, y: cy + 9, z: nz * 0.42 },
+  ]
+  addFace(built, [nose[0], nose[1], nose[2]], 'neck', view, 'nose')
+  addFace(built, [nose[1], nose[3], nose[2]], 'neck', view, 'nose')
+}
+
+interface LimbSta {
+  y: number
+  rx: number
+  rz: number
+  cx: number
+  cz: number
+  zone: string
+  mark?: boolean
+}
+
+function armStations(side: 1 | -1, m: Metrics, view: ViewAngle): LimbSta[] {
+  const s = side
+  const a = m.arm
+  const hang = m.armHang
+  const socket = m.shoulder - 1
+  // Side view swings the near arm forward so it doesn't lie on the torso.
+  const fwd = view === 'side' ? [0, 6, 14, 22, 28, 32, 34, 34] : [0, 0, 0, 0, 0, 0, 0, 0]
+  const rows: LimbSta[] = [
+    { y: 124, rx: 11 * a, rz: 10 * a, cx: s * socket, cz: 2, zone: 'shoulders' },
+    { y: 146, rx: 8.4 * a, rz: 7.8 * a, cx: s * (hang - 6), cz: 4, zone: 'shoulders' },
+    { y: 168, rx: 6.4 * a, rz: 6 * a, cx: s * (hang - 2), cz: 6, zone: 'elbows-forearms' },
+    { y: 190, rx: 8 * a, rz: 7.2 * a, cx: s * hang, cz: 7, zone: 'elbows-forearms', mark: true },
+    { y: 214, rx: 5.5 * a, rz: 5.1 * a, cx: s * (hang + 0.5), cz: 5, zone: 'elbows-forearms' },
+    { y: 236, rx: 4 * a, rz: 3.7 * a, cx: s * hang, cz: 4, zone: 'wrists-hands', mark: true },
+    // Palm is wide and flat so the hand reads at phone size.
+    { y: 252, rx: 8.6 * a, rz: 3.1 * a, cx: s * hang, cz: 6, zone: 'wrists-hands' },
+    { y: 272, rx: 6.2 * a, rz: 2.4 * a, cx: s * (hang + 0.4), cz: 8, zone: 'wrists-hands' },
+  ]
+  rows.forEach((row, i) => {
+    row.cz += fwd[i]
+  })
+  return rows
+}
+
+function legStations(side: 1 | -1, m: Metrics, view: ViewAngle): LimbSta[] {
+  const s = side
+  const x = s * m.stance
+  const th = m.thigh
+  // Far leg sits behind the near one so a side view shows two contours.
+  const back = side === -1 ? (view === 'side' ? -16 : -4) : 0
+  return [
+    { y: 258, rx: th + 0.6, rz: th + 1.4, cx: x, cz: 1 + back, zone: 'hip' },
+    { y: 284, rx: th + 1.4, rz: th + 0.8, cx: x + s * 0.4, cz: 2 + back, zone: 'thigh' },
+    { y: 310, rx: th + 0.2, rz: th, cx: x, cz: 2 + back, zone: 'thigh' },
+    { y: 332, rx: th - 2.4, rz: th - 2, cx: x - s * 0.2, cz: 1.5 + back, zone: 'thigh' },
+    // Kneecap: wider than the thigh just above it, and forward.
+    { y: 348, rx: th + 0.8, rz: th + 0.4, cx: x, cz: 7 + back, zone: 'knee', mark: true },
+    { y: 366, rx: th - 4.6, rz: th - 4.2, cx: x - s * 0.2, cz: 1 + back, zone: 'knee' },
+    // Calf belly sits back, then the ankle pinches.
+    { y: 394, rx: th - 1.2, rz: th - 0.6, cx: x, cz: -4 + back, zone: 'calf' },
+    { y: 422, rx: 6.2, rz: 6.4, cx: x, cz: -0.5 + back, zone: 'ankle', mark: true },
+    { y: 438, rx: 7.2, rz: 6.2, cx: x + s * 0.6, cz: -10 + back, zone: 'foot' },
+    { y: 452, rx: 7.4, rz: 5, cx: x + s * 3.2, cz: 4 + back, zone: 'foot' },
+    { y: 462, rx: 5.8, rz: 3.6, cx: x + s * 6, cz: 18 + back, zone: 'foot' },
+  ]
+}
+
+function limbZone(sta: LimbSta, side: 1 | -1): string {
+  const L = side === 1 ? 'r' : 'l'
+  if (sta.zone === 'hip') return side === 1 ? 'hips-glutes-r' : 'hips-glutes-l'
+  if (sta.zone === 'knee') return `knees-${L}`
+  if (sta.zone === 'calf') return `calves-${L}`
+  if (sta.zone === 'ankle') return `ankles-${L}`
+  if (sta.zone === 'foot') return 'soles-feet'
+  if (sta.zone === 'thigh') return `thigh-${L}`
+  return sta.zone
+}
+
+function buildLimb(
+  built: Built,
+  stations: LimbSta[],
+  side: 1 | -1,
+  view: ViewAngle,
+  part: string,
+  segs: number,
+) {
+  const rings = stations.map((p) => ring(p.y, p.rx, p.rz, segs, p.cx, p.cz))
+  for (let i = 0; i < rings.length - 1; i++) {
+    const zone = limbZone(stations[i + 1], side)
+    stitch(built, rings[i], rings[i + 1], view, part, () => zone)
+  }
+  built.outlines.push(...outlineOf(rings, view))
+  stations.forEach((s, i) => {
+    if (s.mark) built.landmarks.push(projectRing(rings[i], view))
+  })
+  return rings
+}
+
+function buildThumb(built: Built, side: 1 | -1, m: Metrics, view: ViewAngle) {
+  const s = side
+  const a = m.arm
+  const hang = m.armHang
+  const fwd = view === 'side' ? 34 : 0
+  const palm = { x: s * hang, y: 250, z: 6 + fwd }
+  const root: V3 = { x: palm.x + s * 4.2 * a, y: palm.y + 2, z: palm.z + 1.2 }
+  const tip: V3 = { x: palm.x + s * 12 * a, y: palm.y + 8, z: palm.z + 5 }
+  const knuckle: V3 = { x: palm.x + s * 7.5 * a, y: palm.y + 11, z: palm.z - 0.4 }
+  const base: V3 = { x: palm.x + s * 2.2 * a, y: palm.y + 8, z: palm.z + 2 }
+  const part = side === 1 ? 'arm-r' : 'arm-l'
+  addFace(built, [root, tip, knuckle], 'wrists-hands', view, part)
+  addFace(built, [root, knuckle, base], 'wrists-hands', view, part)
+}
+
+function screenX(face: Face): number {
+  let x = 0
+  for (const p of face.pts) x += p[0]
+  return x / face.pts.length
+}
+
+/**
+ * Thigh faces are built as placeholders (`thigh-l` / `thigh-r`), then split in
+ * screen space so the outer thigh the user actually sees is the IT band.
+ * A pure 3D "lateral" slice is only a few pixels wide from the front.
+ */
+function retargetThighs(faces: Face[], view: ViewAngle) {
+  for (const side of [1, -1] as const) {
+    const L = side === 1 ? 'r' : 'l'
+    const placeholder = `thigh-${L}`
+    const group = faces.filter((f) => f.zone === placeholder)
+    if (!group.length) continue
+    let minX = Infinity
+    let maxX = -Infinity
+    for (const f of group) {
+      const x = screenX(f)
+      if (x < minX) minX = x
+      if (x > maxX) maxX = x
+    }
+    const span = Math.max(1, maxX - minX)
+    for (const f of group) {
+      const t = (screenX(f) - minX) / span
+      const outerT = side === 1 ? t : 1 - t
+      if (view === 'side') {
+        // Screen-left is anterior (the face points left).
+        if (t < 0.28) f.zone = `quads-${L}`
+        else if (t > 0.72) f.zone = `hamstrings-${L}`
+        else f.zone = `it-band-${L}`
+      } else if (view === 'back') {
+        if (outerT > 0.56) f.zone = `it-band-${L}`
+        else f.zone = `hamstrings-${L}`
+      } else if (f.body.z < -1.5 && view === 'three-quarter') {
+        f.zone = `hamstrings-${L}`
+      } else if (outerT > 0.5) {
+        f.zone = `it-band-${L}`
+      } else {
+        f.zone = `quads-${L}`
+      }
+    }
   }
 }
 
 export function buildWireMesh(gender: Gender, view: ViewAngle): WireMesh {
-  if (view === 'side') return buildSideProfile(gender === 'male')
-  return buildProjected(gender, view)
+  const m = metrics(gender === 'male')
+  const built: Built = { faces: [], outlines: [], landmarks: [] }
+  buildAxial(built, m, view)
+  for (const side of [1, -1] as const) {
+    // A side view shows the near arm only; the far arm would land on the chest.
+    if (view === 'side' && side === -1) continue
+    const part = side === 1 ? 'arm-r' : 'arm-l'
+    buildLimb(built, armStations(side, m, view), side, view, part, 6)
+    buildThumb(built, side, m, view)
+  }
+  for (const side of [1, -1] as const) {
+    const part = side === 1 ? 'leg-r' : 'leg-l'
+    buildLimb(built, legStations(side, m, view), side, view, part, 6)
+  }
+  retargetThighs(built.faces, view)
+  built.faces.sort((a, b) => a.depth - b.depth)
+  return built
 }
 
-export function zonesForRegion(regionId: string): string[] {
-  const base = regionId.replace(/-(?:l|r)$/i, '')
-  const out = new Set<string>([regionId, base])
-  if (base === 'traps') {
-    out.add('neck')
-    out.add('shoulders')
-  }
-  if (base === 'it-band') {
-    out.add(regionId)
-  }
-  if (base === 'hamstrings') {
-    out.add(`hamstrings-l`)
-    out.add(`hamstrings-r`)
-  }
-  if (base === 'lower-back' || base === 'mid-back' || base === 'upper-back') {
-    out.add('abs')
-    out.add('chest')
-    out.add('hips-glutes')
-  }
-  return [...out]
-}
-
+/** A face lights only for its own region — never a whole neighboring stack. */
 export function faceMatchesSelection(face: Face, selected: Set<string>): boolean {
-  const zone: string | undefined = face.zone
-  if (!zone || selected.size === 0) return false
-  for (const raw of selected) {
-    const id: string = raw
-    if (zone === id) return true
-    if (zonesForRegion(id).includes(zone)) return true
-    const baseId: string = id.replace(/-(?:l|r)$/i, '')
-    const sideMatch = /-(l|r)$/i.exec(id)
-    const sideId: string | undefined = sideMatch ? sideMatch[1].toLowerCase() : undefined
-    if (zone === baseId) return true
-    if (sideId && zone === baseId + '-' + sideId) return true
-    if (!sideId && zone.startsWith(baseId)) return true
-  }
-  return false
+  if (!face.zone || selected.size === 0) return false
+  return selected.has(face.zone)
 }
